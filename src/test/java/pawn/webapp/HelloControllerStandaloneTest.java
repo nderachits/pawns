@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * User: Mikalai_Dzerachyts
  * Date: 8/28/14
  */
-public class HelloControllerTest {
+public class HelloControllerStandaloneTest {
 
     private MockMvc mockMvc;
 
