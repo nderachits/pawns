@@ -34,7 +34,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-jetty:$springBootVersion")
     compile("org.springframework.mobile:spring-mobile-device:1.1.0.RELEASE")
     testCompile("org.springframework:spring-test:$springVersion")
-    compile("org.hibernate:hibernate-validator:4.3.1.Final")
+//    compile("org.hibernate:hibernate-validator:4.3.1.Final")
     compile("org.thymeleaf:thymeleaf-spring4:2.1.2.RELEASE")
     testCompile "junit:junit:4.11"
 }
