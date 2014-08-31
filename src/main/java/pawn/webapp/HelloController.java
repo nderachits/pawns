@@ -14,9 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class HelloController {
 
     @RequestMapping("/")
-    @ResponseBody
     String home() {
-        return "Hello World!";
+        return "board";
     }
 
     public static void main(String[] args) throws Exception {

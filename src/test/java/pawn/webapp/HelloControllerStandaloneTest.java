@@ -1,6 +1,7 @@
 package pawn.webapp;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -8,6 +9,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 /**
  * User: Mikalai_Dzerachyts
@@ -22,11 +24,11 @@ public class HelloControllerStandaloneTest {
         mockMvc = MockMvcBuilders.standaloneSetup(new HelloController()).build();
     }
 
-    @Test
+@Test
     public void rootShouldReturnHelloWorldString() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Hello World!"));
+                .andExpect(view().name("board"));
 
     }
 }
