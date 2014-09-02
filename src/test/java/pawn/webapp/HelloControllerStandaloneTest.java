@@ -24,7 +24,7 @@ public class HelloControllerStandaloneTest {
         mockMvc = MockMvcBuilders.standaloneSetup(new HelloController()).build();
     }
 
-@Test
+    @Test
     public void rootShouldReturnHelloWorldString() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/"))
                 .andExpect(status().isOk())
