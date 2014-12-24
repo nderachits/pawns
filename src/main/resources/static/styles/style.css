@@ -1,7 +1,12 @@
 
 
 * {
-    border: 1px dashed skyblue;
+    /*border: 1px dashed skyblue;*/
+}
+
+body {
+    width: 700px;
+    margin: auto;
 }
 
 table {
@@ -28,13 +33,35 @@ td {
 }
 
 .header {
+    border: 2px solid #ac734b;
+    border-radius: 4px;
+}
 
+.header-logo {
+    float: left;
+}
+
+.header-text {
+    float: left;
+    vertical-align: middle;
+    font-size: 64px;
+    padding: 30px;
 }
 
 .gamearea {
     background-color: lightgrey;
+
 }
 
 .footer {
 
+}
+
+
+.clearfix:after {
+    content: ".";
+    visibility: hidden;
+    display: block;
+    height: 0;
+    clear: both;
 }
