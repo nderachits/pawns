@@ -1,7 +1,13 @@
 
+
+* {
+    border: 1px dashed skyblue;
+}
+
 table {
     background-color: gray;
     border-collapse: collapse;
+    margin: auto;
 }
 
 td {
@@ -19,4 +25,16 @@ td {
 
 .white {
     background-color: #f0d3a4;
+}
+
+.header {
+
+}
+
+.gamearea {
+    background-color: lightgrey;
+}
+
+.footer {
+
 }
