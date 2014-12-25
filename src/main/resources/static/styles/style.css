@@ -10,7 +10,7 @@ body {
 }
 
 table {
-    background-color: gray;
+    /*background-color: gray;*/
     border-collapse: collapse;
     margin: auto;
 }
@@ -24,6 +24,10 @@ td {
     padding: 0px;
 }
 
+thead td {
+    height: 12px;
+}
+
 .black {
     background-color: #ac734b;
 }
@@ -35,6 +39,7 @@ td {
 .header {
     border: 2px solid #ac734b;
     border-radius: 4px;
+    margin: 5px;
 }
 
 .header-logo {
@@ -46,11 +51,72 @@ td {
     vertical-align: middle;
     font-size: 64px;
     padding: 30px;
+    color: dimgrey;
 }
 
 .gamearea {
     background-color: lightgrey;
+    border: 2px solid #ac734b;
+    border-radius: 4px;
+    margin: 5px;
+}
 
+.gamefield {
+    width: 159px;
+    height: 159px;
+    position: relative;
+
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.pawn {
+    position: absolute;
+}
+
+#pawn1 {
+    top: 0;
+    left: 0;
+}
+
+#pawn2 {
+    top: 0;
+    left: 53px;
+}
+
+#pawn3 {
+    top: 0;
+    left: 106px;
+}
+
+#pawn4 {
+    top: 106px;
+    left: 0px;
+}
+
+#pawn5 {
+    top: 106px;
+    left: 53px;
+}
+
+#pawn6 {
+    top: 106px;
+    left: 106px;
+}
+
+
+
+.rules {
+    border: 2px solid #ac734b;
+    border-radius: 4px;
+    margin: 5px;
+}
+
+.rules h3 {
+    font-size: 16px;
+    margin: 10px;
 }
 
 .footer {
