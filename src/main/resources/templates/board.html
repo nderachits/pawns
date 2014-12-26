@@ -17,29 +17,35 @@
     <div class="gamefield" >
         <table>
             <tr>
-                <td class="black">3a</td>
-                <td class="white">3b</td>
-                <td class="black">3c</td>
+                <td id="cell0" class="black" ondrop="drop(event)" ondragover="allowDrop(event)">3a</td>
+                <td id="cell1" class="white" ondrop="drop(event)" ondragover="allowDrop(event)">3b</td>
+                <td id="cell2" class="black" ondrop="drop(event)" ondragover="allowDrop(event)">3c</td>
             </tr>
             <tr>
-                <td class="white">2a</td>
-                <td class="black">2b</td>
-                <td class="white">2c</td>
+                <td id="cell3" class="white" ondrop="drop(event)" ondragover="allowDrop(event)">2a</td>
+                <td id="cell4" class="black" ondrop="drop(event)" ondragover="allowDrop(event)">2b</td>
+                <td id="cell5" class="white" ondrop="drop(event)" ondragover="allowDrop(event)">2c</td>
             </tr>
             <tr>
-                <td class="black">1a</td>
-                <td class="white">1b</td>
-                <td class="black">1c</td>
+                <td id="cell6" class="black" ondrop="drop(event)" ondragover="allowDrop(event)">1a</td>
+                <td id="cell7" class="white" ondrop="drop(event)" ondragover="allowDrop(event)">1b</td>
+                <td id="cell8" class="black" ondrop="drop(event)" ondragover="allowDrop(event)">1c</td>
             </tr>
 
         </table>
 
-        <img id="pawn1" class="pawn" src="/images/pawn-black.png"/>
-        <img id="pawn2" class="pawn" src="/images/pawn-black.png"/>
-        <img id="pawn3" class="pawn" src="/images/pawn-black.png"/>
-        <img id="pawn4" class="pawn" src="/images/pawn-white.png"/>
-        <img id="pawn5" class="pawn" src="/images/pawn-white.png"/>
-        <img id="pawn6" class="pawn" src="/images/pawn-white.png"/>
+        <img id="pawn0" onclick="clearPawn(this)" class="pawn" src="/images/pawn-black.png"
+             draggable="true" ondragstart="drag(event)"/>
+        <img id="pawn1" onclick="clearPawn(this)" class="pawn" src="/images/pawn-black.png"
+             draggable="true" ondragstart="drag(event)"/>
+        <img id="pawn2" onclick="clearPawn(this)" class="pawn" src="/images/pawn-black.png"
+             draggable="true" ondragstart="drag(event)"/>
+        <img id="pawn3" onclick="clearPawn(this)" class="pawn" src="/images/pawn-white.png"
+             draggable="true" ondragstart="drag(event)"/>
+        <img id="pawn4" onclick="clearPawn(this)" class="pawn" src="/images/pawn-white.png"
+             draggable="true" ondragstart="drag(event)"/>
+        <img id="pawn5" onclick="clearPawn(this)" class="pawn" src="/images/pawn-white.png"
+             draggable="true" ondragstart="drag(event)"/>
     </div>
 </div>
 

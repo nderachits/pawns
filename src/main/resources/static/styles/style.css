@@ -76,32 +76,32 @@ thead td {
     position: absolute;
 }
 
-#pawn1 {
+#pawn0 {
     top: 0;
     left: 0;
 }
 
-#pawn2 {
+#pawn1 {
     top: 0;
     left: 53px;
 }
 
-#pawn3 {
+#pawn2 {
     top: 0;
     left: 106px;
 }
 
-#pawn4 {
+#pawn3 {
     top: 106px;
     left: 0px;
 }
 
-#pawn5 {
+#pawn4 {
     top: 106px;
     left: 53px;
 }
 
-#pawn6 {
+#pawn5 {
     top: 106px;
     left: 106px;
 }
