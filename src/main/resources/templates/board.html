@@ -34,18 +34,24 @@
 
         </table>
 
-        <img id="pawn0" onclick="clearPawn(this)" class="pawn" src="/images/pawn-black.png"
-             draggable="true" ondragstart="drag(event)"/>
-        <img id="pawn1" onclick="clearPawn(this)" class="pawn" src="/images/pawn-black.png"
-             draggable="true" ondragstart="drag(event)"/>
-        <img id="pawn2" onclick="clearPawn(this)" class="pawn" src="/images/pawn-black.png"
-             draggable="true" ondragstart="drag(event)"/>
-        <img id="pawn3" onclick="clearPawn(this)" class="pawn" src="/images/pawn-white.png"
-             draggable="true" ondragstart="drag(event)"/>
-        <img id="pawn4" onclick="clearPawn(this)" class="pawn" src="/images/pawn-white.png"
-             draggable="true" ondragstart="drag(event)"/>
-        <img id="pawn5" onclick="clearPawn(this)" class="pawn" src="/images/pawn-white.png"
-             draggable="true" ondragstart="drag(event)"/>
+        <img id="pawn0" class="pawn" src="/images/pawn-black.png"
+             draggable="true" ondragstart="drag(event)"
+             ondragover="allowDropToImage(event)" ondrop="dropToImage(event)"/>
+        <img id="pawn1" class="pawn" src="/images/pawn-black.png"
+             draggable="true" ondragstart="drag(event)"
+             ondragover="allowDropToImage(event)" ondrop="dropToImage(event)"/>
+        <img id="pawn2" class="pawn" src="/images/pawn-black.png"
+             draggable="true" ondragstart="drag(event)"
+             ondragover="allowDropToImage(event)" ondrop="dropToImage(event)"/>
+        <img id="pawn3" class="pawn" src="/images/pawn-white.png"
+             draggable="true" ondragstart="drag(event)"
+             ondragover="allowDropToImage(event)" ondrop="dropToImage(event)"/>
+        <img id="pawn4" class="pawn" src="/images/pawn-white.png"
+             draggable="true" ondragstart="drag(event)"
+             ondragover="allowDropToImage(event)" ondrop="dropToImage(event)"/>
+        <img id="pawn5" class="pawn" src="/images/pawn-white.png"
+             draggable="true" ondragstart="drag(event)"
+             ondragover="allowDropToImage(event)" ondrop="dropToImage(event)"/>
     </div>
 </div>
 
