@@ -57,5 +57,5 @@ function calcLeftFromId(id) {
 
 function clearPawn(el) {
     console.log("clear img: "+el.id);
-    el.style.visibility = "hidden";
+    el.style.display = "none";
 }
