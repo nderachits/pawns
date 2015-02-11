@@ -16,6 +16,7 @@ function getCssProperty(elmId, property){
 }
 
 function dropToImage(ev) {
+    ev.preventDefault();
     console.log("drop img: "+ev.target.id);
     var data = ev.dataTransfer.getData("text");
 
