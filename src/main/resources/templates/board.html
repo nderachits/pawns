@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Pawns app</title>
-    <link type="text/css" rel="stylesheet" href="/styles/style.css?version=0.2"/>
-    <script src="/js/scripts.js?version=0.2"/>
+    <link type="text/css" rel="stylesheet" href="/styles/style.css?version=0.1"
+          th:attr="href='/styles/style.css?version='+${pawnversion}"/>
+    <script src="/js/scripts.js?version=0.1"
+          th:attr="src='/js/scripts.js?version='+${pawnversion}"/>
 </head>
 <body>
-
+<!--<p th:text="${app.version}"></p>-->
 <div class="header clearfix">
     <img class="header-logo" src="/images/pawn-small.jpg"/>
     <div class="header-text" >Pawns game</div>

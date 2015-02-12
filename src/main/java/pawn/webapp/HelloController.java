@@ -1,11 +1,13 @@
 package pawn.webapp;
 
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -13,8 +15,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @EnableAutoConfiguration
 public class HelloController {
 
+    @Value("${app.version}")
+    private String version;
+
     @RequestMapping("/")
-    String home() {
+    public String home(Model model) {
+        model.addAttribute("pawnversion", version);
         return "board";
     }
 
