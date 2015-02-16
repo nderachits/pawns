@@ -17,43 +17,49 @@
 <div class="gamearea">
 
     <div class="gamefield" >
-        <table>
+        <table >
             <tr>
-                <td id="cell0" class="black" ondrop="drop(event)" ondragover="allowDrop(event)">3a</td>
-                <td id="cell1" class="white" ondrop="drop(event)" ondragover="allowDrop(event)">3b</td>
-                <td id="cell2" class="black" ondrop="drop(event)" ondragover="allowDrop(event)">3c</td>
+                <td id="cell0" class="black" ondrop="drop(event)" ondragover="allowDrop(event)" onclick="moveClick(this)">3a</td>
+                <td id="cell1" class="white" ondrop="drop(event)" ondragover="allowDrop(event)" onclick="moveClick(this)">3b</td>
+                <td id="cell2" class="black" ondrop="drop(event)" ondragover="allowDrop(event)" onclick="moveClick(this)">3c</td>
             </tr>
             <tr>
-                <td id="cell3" class="white" ondrop="drop(event)" ondragover="allowDrop(event)">2a</td>
-                <td id="cell4" class="black" ondrop="drop(event)" ondragover="allowDrop(event)">2b</td>
-                <td id="cell5" class="white" ondrop="drop(event)" ondragover="allowDrop(event)">2c</td>
+                <td id="cell3" class="white" ondrop="drop(event)" ondragover="allowDrop(event)" onclick="moveClick(this)">2a</td>
+                <td id="cell4" class="black" ondrop="drop(event)" ondragover="allowDrop(event)" onclick="moveClick(this)">2b</td>
+                <td id="cell5" class="white" ondrop="drop(event)" ondragover="allowDrop(event)" onclick="moveClick(this)">2c</td>
             </tr>
             <tr>
-                <td id="cell6" class="black" ondrop="drop(event)" ondragover="allowDrop(event)">1a</td>
-                <td id="cell7" class="white" ondrop="drop(event)" ondragover="allowDrop(event)">1b</td>
-                <td id="cell8" class="black" ondrop="drop(event)" ondragover="allowDrop(event)">1c</td>
+                <td id="cell6" class="black" ondrop="drop(event)" ondragover="allowDrop(event)" onclick="moveClick(this)">1a</td>
+                <td id="cell7" class="white" ondrop="drop(event)" ondragover="allowDrop(event)" onclick="moveClick(this)">1b</td>
+                <td id="cell8" class="black" ondrop="drop(event)" ondragover="allowDrop(event)" onclick="moveClick(this)">1c</td>
             </tr>
 
         </table>
 
         <img id="pawn0" class="pawn" src="/images/pawn-black.png"
              draggable="true" ondragstart="drag(event)"
-             ondragover="allowDropToImage(event)" ondrop="dropToImage(event)"/>
+             ondragover="allowDropToImage(event)" ondrop="dropToImage(event)"
+             onclick="pawnClick(this);"/>
         <img id="pawn1" class="pawn" src="/images/pawn-black.png"
              draggable="true" ondragstart="drag(event)"
-             ondragover="allowDropToImage(event)" ondrop="dropToImage(event)"/>
+             ondragover="allowDropToImage(event)" ondrop="dropToImage(event)"
+             onclick="pawnClick(this);"/>
         <img id="pawn2" class="pawn" src="/images/pawn-black.png"
              draggable="true" ondragstart="drag(event)"
-             ondragover="allowDropToImage(event)" ondrop="dropToImage(event)"/>
+             ondragover="allowDropToImage(event)" ondrop="dropToImage(event)"
+             onclick="pawnClick(this);"/>
         <img id="pawn3" class="pawn" src="/images/pawn-white.png"
              draggable="true" ondragstart="drag(event)"
-             ondragover="allowDropToImage(event)" ondrop="dropToImage(event)"/>
+             ondragover="allowDropToImage(event)" ondrop="dropToImage(event)"
+             onclick="pawnClick(this);"/>
         <img id="pawn4" class="pawn" src="/images/pawn-white.png"
              draggable="true" ondragstart="drag(event)"
-             ondragover="allowDropToImage(event)" ondrop="dropToImage(event)"/>
+             ondragover="allowDropToImage(event)" ondrop="dropToImage(event)"
+             onclick="pawnClick(this);"/>
         <img id="pawn5" class="pawn" src="/images/pawn-white.png"
              draggable="true" ondragstart="drag(event)"
-             ondragover="allowDropToImage(event)" ondrop="dropToImage(event)"/>
+             ondragover="allowDropToImage(event)" ondrop="dropToImage(event)"
+             onclick="pawnClick(this);"/>
     </div>
 </div>
 

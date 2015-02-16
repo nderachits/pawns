@@ -76,6 +76,10 @@ thead td {
     position: absolute;
 }
 
+.pawnselected {
+    opacity: 0.3;
+}
+
 #pawn0 {
     top: 0;
     left: 0;
