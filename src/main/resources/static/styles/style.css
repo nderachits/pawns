@@ -9,13 +9,13 @@ body {
     margin: auto;
 }
 
-table {
+.gamefield table {
     /*background-color: gray;*/
     border-collapse: collapse;
     margin: auto;
 }
 
-td {
+.gamefield td {
     width: 53px;
     height: 53px;
     vertical-align: top;
@@ -24,8 +24,17 @@ td {
     padding: 0px;
 }
 
-thead td {
+.gamefield thead td {
     height: 12px;
+}
+
+.defeatedpawns {
+    display: inline-block;
+}
+.defeatedpawns td{
+    width: 53px;
+    height: 53px;
+    vertical-align: top;
 }
 
 .black {
@@ -70,6 +79,7 @@ thead td {
     margin-right: auto;
     margin-top: 10px;
     margin-bottom: 10px;
+    display: inline-block;
 }
 
 .pawn {
