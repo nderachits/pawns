@@ -8,13 +8,15 @@
           th:attr="src='/js/scripts.js?version='+${pawnversion}"/>
 </head>
 <body>
-<!--<p th:text="${app.version}"></p>-->
+
 <div class="header clearfix">
     <img class="header-logo" src="/images/pawn-small.jpg"/>
     <div class="header-text" >Pawns game</div>
 </div>
 
 <div class="gamearea">
+
+    <div class="gamefieldgroup">
 
     <div class="defeatedpawns">
         <table>
@@ -76,6 +78,7 @@
             <tr><td>5</td></tr>
             <tr><td>6</td></tr>
         </table>
+    </div>
     </div>
 </div>
 
