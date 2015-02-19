@@ -1,4 +1,4 @@
-package pawn.dto;
+package pawn.model;
 
 /**
  * User: nike

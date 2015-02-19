@@ -1,4 +1,4 @@
-package pawn.dto;
+package pawn.model;
 
 /**
  * Created by Mikalai_Dzerachyts on 2/18/2015.
@@ -25,5 +25,10 @@ public class Board {
 
     public Cell[] cells() {
         return cells.clone();
+    }
+
+    public void saveMove(int from, int to) {
+        cells[to] = cells[from];
+        cells[from] = Cell.empty;
     }
 }
