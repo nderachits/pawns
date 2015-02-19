@@ -33,10 +33,10 @@ dependencies {
     }
     compile("org.springframework.boot:spring-boot-starter-jetty:$springBootVersion")
     compile("org.springframework.mobile:spring-mobile-device:1.1.0.RELEASE")
-    testCompile("org.springframework:spring-test:$springVersion")
-//    compile("org.hibernate:hibernate-validator:4.3.1.Final")
     compile("org.thymeleaf:thymeleaf-spring4:2.1.2.RELEASE")
-    testCompile "junit:junit:4.11"
+    testCompile("junit:junit:4.11")
+    testCompile("org.springframework:spring-test:$springVersion")
+    testCompile("com.jayway.jsonpath:json-path-assert:0.8.1")
 }
 
 task jenkinsTest{
