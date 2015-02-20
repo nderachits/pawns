@@ -20,14 +20,18 @@ public class BoardService {
 
     @RequestMapping("/board")
     public BoardDto board() {
-        BoardDao boardDao = new BoardDaoInMemory();
-        return new BoardDto(boardDao.loadBoard().cells());
+        Board board = new BoardDaoInMemory().loadBoard();
+        return new BoardDto(board.cells());
     }
 
     @RequestMapping(value = "/move", method = RequestMethod.POST)
     public void move(@RequestBody MoveDto param) {
-        BoardDao boardDao = new BoardDaoInMemory();
-        Board board = boardDao.loadBoard();
+        Board board = new BoardDaoInMemory().loadBoard();
         board.saveMove(param.getFrom(), param.getTo());
+    }
+
+    @RequestMapping(value = "/newgame", method = RequestMethod.POST)
+    public void newGame() {
+        new BoardDaoInMemory().newGame();
     }
 }

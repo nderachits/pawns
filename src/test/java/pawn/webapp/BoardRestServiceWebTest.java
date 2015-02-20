@@ -107,4 +107,20 @@ public class BoardRestServiceWebTest {
                         is(Cell.empty.name()), is(Cell.white.name()), is(Cell.empty.name()),
                         is(Cell.white.name()), is(Cell.empty.name()), is(Cell.white.name()))));
     }
+
+    @Test
+    public void newGameResetsBoardJson() throws Exception {
+        Board board = new BoardDaoInMemory().loadBoard();
+        board.saveMove(7, 4);
+
+        mockMvc.perform(post("/newgame")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        Board anotherBoard = new BoardDaoInMemory().loadBoard();
+        assertArrayEquals(new Cell[]{
+                Cell.black, Cell.black, Cell.black,
+                Cell.empty, Cell.empty, Cell.empty,
+                Cell.white, Cell.white, Cell.white}, anotherBoard.cells());
+    }
 }
