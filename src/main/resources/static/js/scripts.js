@@ -4,8 +4,56 @@
 
 window.onload = function () {
     //alert("It's loaded with images!")
+    loadBoard();
+};
+
+function loadBoard() {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+                var obj = JSON.parse(xmlhttp.responseText);
+                console.log("cells: " + obj.cells);
+                placePawns(obj.cells);
+            }
+        };
+    xmlhttp.open('GET', '/board', true);
+    xmlhttp.send();
 }
 
+function placePawns(cells) {
+    var blackIds = ["pawn0", "pawn1", "pawn2"];
+    var whiteIds = ["pawn3", "pawn4", "pawn5"];
+    for(var i=0; i<9; i++) {
+        var cellId = "cell"+i;
+        if(cells[i] === "black") {
+            var pawnId = blackIds.pop();
+            placePawn(pawnId, cellId);
+        } else if( cells[i] == "white") {
+            var pawnId = whiteIds.pop();
+            placePawn(pawnId, cellId);
+        }
+    }
+}
+
+function placePawn(pawnId, cellId) {
+    moveToCell(document.getElementById(pawnId), cellId);
+}
+
+function moveListener(cellIndFrom, cellIndTo) {
+    console.log("cellIndFrom: "+cellIndFrom+", cellIndTo: "+cellIndTo);
+    //ajaxcall
+    var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
+    xmlhttp.open("POST", "/move");
+    xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xmlhttp.send(JSON.stringify({from:cellIndFrom, to:cellIndTo}));
+}
+
+function cellIndByPawn(pawn) {
+    var top = getCssProperty(pawn, "top");
+    var left = getCssProperty(pawn, "left");
+    var id = Math.floor(top/53)*3 + Math.floor(left/53);
+    return id;
+}
 
 function allowDrop(ev) {
     ev.preventDefault();
@@ -20,6 +68,7 @@ function getCssProperty(elem, property){
 }
 
 function moveToPawn(pawnToMove, targetPawn) {
+    moveListener(cellIndByPawn(pawnToMove), cellIndByPawn(targetPawn));
     console.log("moving "+pawnToMove.id+" to "+targetPawn.id);
     pawnToMove.style.top = getCssProperty(targetPawn, "top");
     pawnToMove.style.left = getCssProperty(targetPawn, "left");
@@ -54,8 +103,10 @@ function drop(ev) {
     ev.preventDefault();
     var data = ev.dataTransfer.getData("text");
     console.log("move img: "+ev.target.id+", data: "+data);
-    var x = document.getElementById(data);
-    moveToCell(x, ev.target.id);
+    var pawn = document.getElementById(data);
+
+    moveListener(cellIndByPawn(pawn), ev.target.id.substring("cell".length));
+    moveToCell(pawn, ev.target.id);
 }
 
 function calcTopFromId(id) {
@@ -98,6 +149,7 @@ function moveClick(cell) {
     console.log("cell click "+cell.id);
     var selectedPawn = getSelectedPawn();
     if(selectedPawn) {
+        moveListener(cellIndByPawn(selectedPawn), cell.id.substring("cell".length));
         moveToCell(selectedPawn, cell.id);
         selectedPawn.classList.remove('pawnselected');
     }
