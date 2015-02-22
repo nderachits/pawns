@@ -39,6 +39,11 @@ public class BoardTest {
                 Cell.empty, Cell.white, Cell.white}, board.cells());
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void throwExceptionWhenStartingCellOfMoveIsEmpty() {
+        board.saveMove(3, 0);
+    }
+
 }
 
 

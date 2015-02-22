@@ -75,43 +75,16 @@ body {
 
 .pawn {
     position: absolute;
+    display: none;
 }
 
 .pawnselected {
     opacity: 0.3;
 }
 
-#pawn0 {
-    top: 0;
-    left: 0;
+.newgame {
+    font-size: large;
 }
-
-#pawn1 {
-    top: 0;
-    left: 53px;
-}
-
-#pawn2 {
-    top: 0;
-    left: 106px;
-}
-
-#pawn3 {
-    top: 106px;
-    left: 0px;
-}
-
-#pawn4 {
-    top: 106px;
-    left: 53px;
-}
-
-#pawn5 {
-    top: 106px;
-    left: 106px;
-}
-
-
 
 .rules {
     border: 2px solid #ac734b;

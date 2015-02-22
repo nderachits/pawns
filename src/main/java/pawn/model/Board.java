@@ -28,6 +28,9 @@ public class Board {
     }
 
     public void saveMove(int from, int to) {
+        if(cells[from] == Cell.empty) {
+            throw new IllegalStateException("Start cell of move is empty. from: "+from+", to: "+to);
+        }
         cells[to] = cells[from];
         cells[from] = Cell.empty;
     }

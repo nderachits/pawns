@@ -7,6 +7,14 @@ window.onload = function () {
     loadBoard();
 };
 
+function newgame() {
+    var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
+    xmlhttp.open("POST", "/newgame");
+    xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xmlhttp.send(JSON.stringify({}));
+    location.reload();
+}
+
 function loadBoard() {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
@@ -36,7 +44,9 @@ function placePawns(cells) {
 }
 
 function placePawn(pawnId, cellId) {
-    moveToCell(document.getElementById(pawnId), cellId);
+    var pawn = document.getElementById(pawnId);
+    moveToCell(pawn, cellId);
+    pawn.style.display = "block";
 }
 
 function moveListener(cellIndFrom, cellIndTo) {
@@ -51,7 +61,9 @@ function moveListener(cellIndFrom, cellIndTo) {
 function cellIndByPawn(pawn) {
     var top = getCssProperty(pawn, "top");
     var left = getCssProperty(pawn, "left");
-    var id = Math.floor(top/53)*3 + Math.floor(left/53);
+    var topInt = top.substr(0, top.length-"px".length);
+    var leftInt = left.substr(0, left.length-"px".length);
+    var id = Math.floor(topInt/53)*3 + Math.floor(leftInt/53);
     return id;
 }
 
