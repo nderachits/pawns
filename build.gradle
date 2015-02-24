@@ -1,8 +1,7 @@
 
 buildscript {
     ext {
-        springBootVersion = "1.0.2.RELEASE"
-        springVersion = "4.0.3.RELEASE"
+//        springBootVersion = "1.0.2.RELEASE"
     }
 
     repositories {
@@ -10,7 +9,7 @@ buildscript {
         mavenLocal()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.1.RELEASE")
     }
 }
 apply plugin: 'java'
@@ -28,14 +27,14 @@ repositories {
 }
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-web:$springBootVersion") {
+    compile("org.springframework.boot:spring-boot-starter-web") {
         exclude module: "spring-boot-starter-tomcat"
     }
-    compile("org.springframework.boot:spring-boot-starter-jetty:$springBootVersion")
-    compile("org.springframework.mobile:spring-mobile-device:1.1.0.RELEASE")
-    compile("org.thymeleaf:thymeleaf-spring4:2.1.2.RELEASE")
+    compile("org.springframework.boot:spring-boot-starter-jetty")
+    compile("org.springframework.mobile:spring-mobile-device")
+    compile("org.thymeleaf:thymeleaf-spring4")
     testCompile("junit:junit:4.12")
-    testCompile("org.springframework:spring-test:$springVersion")
+    testCompile("org.springframework:spring-test")
     testCompile("com.jayway.jsonpath:json-path-assert:0.8.1")
 }
 
