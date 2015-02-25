@@ -1,14 +1,28 @@
 package pawn.webapp;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
 import pawn.model.Board;
 import pawn.model.dao.BoardDao;
 import pawn.model.dao.BoardDaoInMemory;
 import pawn.model.dto.BoardDto;
 import pawn.model.dto.MoveDto;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * User: nike
@@ -16,7 +30,10 @@ import pawn.model.dto.MoveDto;
  */
 
 @RestController
-public class BoardService {
+@EnableWebSocket
+public class BoardService extends TextWebSocketHandler implements WebSocketConfigurer {
+
+    private List<WebSocketSession> sessions = new ArrayList<>();
 
     @RequestMapping("/board")
     public BoardDto board() {
@@ -25,13 +42,54 @@ public class BoardService {
     }
 
     @RequestMapping(value = "/move", method = RequestMethod.POST)
-    public void move(@RequestBody MoveDto param) {
+    public void move(@RequestBody MoveDto param) throws JsonProcessingException {
         Board board = new BoardDaoInMemory().loadBoard();
         board.saveMove(param.getFrom(), param.getTo());
+
+        sendAll();
     }
 
     @RequestMapping(value = "/newgame", method = RequestMethod.POST)
     public void newGame() {
         new BoardDaoInMemory().newGame();
+    }
+
+    @Override
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        registry.addHandler(this, "/websocket");
+    }
+
+    @Override
+    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        super.afterConnectionEstablished(session);
+        System.out.println("new session: "+session.getId());
+        sessions.add(session);
+    }
+
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+        super.afterConnectionClosed(session, status);
+        System.out.println("session end: "+session.getId());
+        sessions.remove(session);
+    }
+
+    @Override
+    public void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
+        System.out.println("websocket: "+message.getPayload());
+    }
+
+    public void sendAll() throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Board board = new BoardDaoInMemory().loadBoard();
+        String text = mapper.writeValueAsString(new BoardDto(board.cells()));
+        System.out.println("text to send: " + text);
+        for (Iterator<WebSocketSession> iterator = sessions.iterator(); iterator.hasNext(); ) {
+            WebSocketSession session = iterator.next();
+            try {
+                session.sendMessage(new TextMessage(text));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

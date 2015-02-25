@@ -5,7 +5,31 @@
 window.onload = function () {
     //alert("It's loaded with images!")
     loadBoard();
+    connectWebSocket();
 };
+
+function connectWebSocket() {
+    var ws = new WebSocket("ws://"+location.host+"/websocket");
+
+    ws.onopen = function() {
+        console.log("Opened!");
+    };
+
+    ws.onmessage = function (evt) {
+        var obj = JSON.parse(evt.data);
+        console.log("cells: " + obj.cells);
+        clearAllPawns();
+        placePawns(obj.cells);
+    };
+
+    ws.onclose = function() {
+        console.log("Closed!");
+    };
+
+    ws.onerror = function(err) {
+        console.log("Error: " + err);
+    };
+}
 
 function newgame() {
     var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
@@ -47,6 +71,13 @@ function placePawn(pawnId, cellId) {
     var pawn = document.getElementById(pawnId);
     moveToCell(pawn, cellId);
     pawn.style.display = "block";
+}
+
+function clearAllPawns() {
+    for (var i = 0; i < 6; i++) {
+        var pawnId = "pawn"+i;
+        clearPawn(document.getElementById(pawnId));
+    }
 }
 
 function moveListener(cellIndFrom, cellIndTo) {
