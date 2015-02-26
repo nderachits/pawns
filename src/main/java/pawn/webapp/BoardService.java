@@ -14,7 +14,6 @@ import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import pawn.model.Board;
-import pawn.model.dao.BoardDao;
 import pawn.model.dao.BoardDaoInMemory;
 import pawn.model.dto.BoardDto;
 import pawn.model.dto.MoveDto;
@@ -50,8 +49,9 @@ public class BoardService extends TextWebSocketHandler implements WebSocketConfi
     }
 
     @RequestMapping(value = "/newgame", method = RequestMethod.POST)
-    public void newGame() {
+    public void newGame() throws JsonProcessingException {
         new BoardDaoInMemory().newGame();
+        sendAll();
     }
 
     @Override
@@ -64,6 +64,7 @@ public class BoardService extends TextWebSocketHandler implements WebSocketConfi
         super.afterConnectionEstablished(session);
         System.out.println("new session: "+session.getId());
         sessions.add(session);
+        sendAll();
     }
 
     @Override

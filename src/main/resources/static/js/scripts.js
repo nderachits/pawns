@@ -4,29 +4,50 @@
 
 window.onload = function () {
     //alert("It's loaded with images!")
-    loadBoard();
     connectWebSocket();
+
+    document.addEventListener("visibilitychange", updateVisibilityState);
 };
 
-function connectWebSocket() {
-    var ws = new WebSocket("ws://"+location.host+"/websocket");
+function updateVisibilityState(event) {
+    console.log("Event: " + event.type+", hidden:"+document["hidden"] );
+    if (!document["hidden"]) {
+        console.log("updateOnlineStatus reconnect");
+        if(window["ws"] ) {
+            window.ws.onclose = function(){};
+            window.ws.close();
+        }
+        connectWebSocket();
+    }
+}
 
-    ws.onopen = function() {
+function connectWebSocket() {
+
+    window.ws = new WebSocket("ws://"+location.host+"/websocket");
+
+    window.ws.onopen = function() {
         console.log("Opened!");
     };
 
-    ws.onmessage = function (evt) {
+    window.ws.onmessage = function (evt) {
         var obj = JSON.parse(evt.data);
         console.log("cells: " + obj.cells);
         clearAllPawns();
         placePawns(obj.cells);
     };
 
-    ws.onclose = function() {
+    window.ws.onclose = function() {
         console.log("Closed!");
+        if (typeof document["hidden"] === "undefined" || !document["hidden"]) {
+            setTimeout(function () {
+                // Connection has closed so try to reconnect every 10 seconds.
+                console.log("try reconnect");
+                connectWebSocket();
+            }, 10 * 1000);
+        }
     };
 
-    ws.onerror = function(err) {
+    window.ws.onerror = function(err) {
         console.log("Error: " + err);
     };
 }
@@ -36,7 +57,6 @@ function newgame() {
     xmlhttp.open("POST", "/newgame");
     xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xmlhttp.send(JSON.stringify({}));
-    location.reload();
 }
 
 function loadBoard() {
