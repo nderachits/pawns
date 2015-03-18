@@ -37,4 +37,22 @@ public class BoardDaoInMemoryTest {
                 Cell.white, Cell.white, Cell.white}, board.cells());
 
     }
+
+    @Test
+    public void loadNewGameByCode() {
+        String gameId = boardDao.newGameWithId();
+        assertNotNull(gameId);
+        Board board = boardDao.loadBoardById(gameId);
+        assertNotNull(board);
+    }
+
+    @Test
+    public void newGameCreatesUniqueIds() {
+        String gameId1 = boardDao.newGameWithId();
+        String gameId2 = boardDao.newGameWithId();
+        assertNotEquals(gameId1, gameId2);
+        Board board1 = boardDao.loadBoardById(gameId1);
+        Board board2 = boardDao.loadBoardById(gameId2);
+        assertNotEquals(board1, board2);
+    }
 }
