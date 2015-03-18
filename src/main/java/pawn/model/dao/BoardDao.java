@@ -8,6 +8,6 @@ import pawn.model.Board;
 public interface BoardDao {
     Board loadBoard();
     void newGame();
-    String newGameWithId();
+    String newGameId();
     Board loadBoardById(String gameId);
 }

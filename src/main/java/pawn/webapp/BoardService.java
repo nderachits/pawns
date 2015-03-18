@@ -2,10 +2,7 @@ package pawn.webapp;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -16,11 +13,11 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import pawn.model.Board;
 import pawn.model.dao.BoardDaoInMemory;
 import pawn.model.dto.BoardDto;
+import pawn.model.dto.GameDTO;
 import pawn.model.dto.MoveDto;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -34,12 +31,20 @@ public class BoardService extends TextWebSocketHandler implements WebSocketConfi
 
     private List<WebSocketSession> sessions = new ArrayList<>();
 
+    @Deprecated
     @RequestMapping("/board")
     public BoardDto board() {
         Board board = new BoardDaoInMemory().loadBoard();
         return new BoardDto(board.cells());
     }
 
+    @RequestMapping("/board/{gameId}")
+    public BoardDto boardById(@PathVariable String gameId) {
+        Board board = new BoardDaoInMemory().loadBoardById(gameId);
+        return new BoardDto(board.cells());
+    }
+
+    @Deprecated
     @RequestMapping(value = "/move", method = RequestMethod.POST)
     public void move(@RequestBody MoveDto param) throws JsonProcessingException {
         Board board = new BoardDaoInMemory().loadBoard();
@@ -48,10 +53,24 @@ public class BoardService extends TextWebSocketHandler implements WebSocketConfi
         sendAll();
     }
 
+    @RequestMapping(value = "/move/{gameId}", method = RequestMethod.POST)
+    public void move(@PathVariable String gameId, @RequestBody MoveDto param) throws JsonProcessingException {
+        Board board = new BoardDaoInMemory().loadBoardById(gameId);
+        board.saveMove(param.getFrom(), param.getTo());
+        sendAll();
+    }
+
+    @Deprecated
     @RequestMapping(value = "/newgame", method = RequestMethod.POST)
     public void newGame() throws JsonProcessingException {
         new BoardDaoInMemory().newGame();
         sendAll();
+    }
+
+    @RequestMapping(value = "/newgameid", method = RequestMethod.POST)
+    public GameDTO newGameId() throws JsonProcessingException {
+        String gameId = new BoardDaoInMemory().newGameId();
+        return new GameDTO(gameId);
     }
 
     @Override
@@ -84,8 +103,7 @@ public class BoardService extends TextWebSocketHandler implements WebSocketConfi
         Board board = new BoardDaoInMemory().loadBoard();
         String text = mapper.writeValueAsString(new BoardDto(board.cells()));
         System.out.println("text to send: " + text);
-        for (Iterator<WebSocketSession> iterator = sessions.iterator(); iterator.hasNext(); ) {
-            WebSocketSession session = iterator.next();
+        for (WebSocketSession session : sessions) {
             try {
                 session.sendMessage(new TextMessage(text));
             } catch (IOException e) {

@@ -1,5 +1,6 @@
 package pawn.model.dao;
 
+import pawn.exceptions.GameNotFound;
 import pawn.model.Board;
 
 import java.util.HashMap;
@@ -27,7 +28,7 @@ public class BoardDaoInMemory implements BoardDao {
     }
 
     @Override
-    public String newGameWithId() {
+    public String newGameId() {
         String gameId = "game"+nextGameId++;
         boards.put(gameId, new Board());
         return gameId;
@@ -35,6 +36,10 @@ public class BoardDaoInMemory implements BoardDao {
 
     @Override
     public Board loadBoardById(String gameId) {
-        return boards.get(gameId);
+        Board board1 = boards.get(gameId);
+        if(board1 == null) {
+            throw new GameNotFound("Game "+gameId+" is not found");
+        }
+        return board1;
     }
 }

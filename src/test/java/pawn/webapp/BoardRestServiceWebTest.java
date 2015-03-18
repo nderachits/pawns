@@ -1,6 +1,7 @@
 package pawn.webapp;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import pawn.model.dto.MoveDto;
@@ -41,16 +43,18 @@ public class BoardRestServiceWebTest {
 
     private MockMvc mockMvc;
 
+    private String gameId;
+
     @Before
     public void setUp() throws Exception {
         BoardDao boardDao = new BoardDaoInMemory();
-        boardDao.newGame();
+        gameId = boardDao.newGameId();
         mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
     }
 
     @Test
     public void boardServiceReturnsBoard() throws Exception {
-        mockMvc.perform(get("/board"))
+        mockMvc.perform(get("/board/"+gameId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.cells").isArray())
                 .andExpect(jsonPath("$.cells", hasSize(9)))
@@ -63,10 +67,10 @@ public class BoardRestServiceWebTest {
     @Test
     public void modelChangesBoardJson() throws Exception {
         BoardDao boardDao = new BoardDaoInMemory();
-        Board board = boardDao.loadBoard();
+        Board board = boardDao.loadBoardById(gameId);
         board.saveMove(7, 4);
 
-        mockMvc.perform(get("/board"))
+        mockMvc.perform(get("/board/"+gameId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.cells").isArray())
                 .andExpect(jsonPath("$.cells", hasSize(9)))
@@ -77,14 +81,14 @@ public class BoardRestServiceWebTest {
     }
 
     @Test
-    public void saveMoveThroughRestChangesBoardModel() throws Exception {
-        mockMvc.perform(post("/move")
+    public void saveMoveViaRestChangesBoardModel() throws Exception {
+        mockMvc.perform(post("/move/"+gameId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content( new ObjectMapper().writeValueAsString(new MoveDto(7,4))))
                 .andExpect(status().isOk());
 
         BoardDao boardDao = new BoardDaoInMemory();
-        Board board = boardDao.loadBoard();
+        Board board = boardDao.loadBoardById(gameId);
         assertArrayEquals(new Cell[]{
                 Cell.black, Cell.black, Cell.black,
                 Cell.empty, Cell.white, Cell.empty,
@@ -92,13 +96,13 @@ public class BoardRestServiceWebTest {
     }
 
     @Test
-    public void saveMoveThroughRestChangesBoardJson() throws Exception {
-        mockMvc.perform(post("/move")
+    public void saveMoveViaRestChangesBoardJson() throws Exception {
+        mockMvc.perform(post("/move/"+gameId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content( new ObjectMapper().writeValueAsString(new MoveDto(7,4))))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/board"))
+        mockMvc.perform(get("/board/"+gameId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.cells").isArray())
                 .andExpect(jsonPath("$.cells", hasSize(9)))
@@ -110,17 +114,25 @@ public class BoardRestServiceWebTest {
 
     @Test
     public void newGameResetsBoardJson() throws Exception {
-        Board board = new BoardDaoInMemory().loadBoard();
+        Board board = new BoardDaoInMemory().loadBoardById(gameId);
         board.saveMove(7, 4);
 
-        mockMvc.perform(post("/newgame")
+        MvcResult mvcResult = mockMvc.perform(post("/newgameid")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk()).andReturn();
 
-        Board anotherBoard = new BoardDaoInMemory().loadBoard();
+        String gameId2 = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.gameId");
+
+        Board anotherBoard = new BoardDaoInMemory().loadBoardById(gameId2);
         assertArrayEquals(new Cell[]{
                 Cell.black, Cell.black, Cell.black,
                 Cell.empty, Cell.empty, Cell.empty,
                 Cell.white, Cell.white, Cell.white}, anotherBoard.cells());
+    }
+
+    @Test
+    public void gameNotFoundThrowsError() throws Exception {
+        mockMvc.perform(get("/board/game_not_exist"))
+                .andExpect(status().isNotFound());
     }
 }
