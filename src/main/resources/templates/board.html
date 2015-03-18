@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Pawns app</title>
+    <title>Pawns game</title>
     <link type="text/css" rel="stylesheet" href="/styles/style.css?version=0.1"
           th:attr="href='/styles/style.css?version='+${pawnversion}"/>
     <script src="/js/scripts.js?version=0.1"
@@ -13,9 +13,8 @@
     <img class="header-logo" src="/images/pawn-small.jpg"/>
     <div class="header-text" >Pawns game</div>
 </div>
-
 <div class="gamearea">
-
+    <span th:text="'gameId: '+${gameId}"></span>
     <a href="#" onclick="newgame();" class="newgame">New Game</a>
     <div class="gamefield" >
         <table >

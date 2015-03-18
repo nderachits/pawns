@@ -28,7 +28,7 @@ public class HelloControllerStandaloneTest {
     public void rootShouldReturnHelloWorldString() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("board"));
+                .andExpect(view().name("home"));
 
     }
 }
