@@ -8,14 +8,14 @@
           th:attr="src='/js/scripts.js?version='+${pawnversion}"/>
 </head>
 <body>
-
+<div style="display: none" id="gameId" th:text="${gameId}"></div>
 <div class="header clearfix">
     <img class="header-logo" src="/images/pawn-small.jpg"/>
     <div class="header-text" >Pawns game</div>
 </div>
 <div class="gamearea">
     <span th:text="'gameId: '+${gameId}"></span>
-    <a href="#" onclick="newgame();" class="newgame">New Game</a>
+    <a href="/" class="newgame">Home</a>
     <div class="gamefield" >
         <table >
             <tr>

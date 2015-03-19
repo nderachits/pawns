@@ -3,8 +3,7 @@ package pawn.model.dao;
 import pawn.exceptions.GameNotFound;
 import pawn.model.Board;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * User: nike
@@ -12,24 +11,12 @@ import java.util.Map;
  */
 public class BoardDaoInMemory implements BoardDao {
 
-    private static Board board = new Board();
-
     private static int nextGameId = 1;
-    private static Map<String, Board> boards = new HashMap<>();
-
-    @Override
-    public Board loadBoard() {
-        return board;
-    }
-
-    @Override
-    public void newGame() {
-        board = new Board();
-    }
+    private static Map<String, Board> boards = new LinkedHashMap<>();
 
     @Override
     public String newGameId() {
-        String gameId = "game"+nextGameId++;
+        String gameId = "g"+nextGameId++;
         boards.put(gameId, new Board());
         return gameId;
     }
@@ -41,5 +28,9 @@ public class BoardDaoInMemory implements BoardDao {
             throw new GameNotFound("Game "+gameId+" is not found");
         }
         return board1;
+    }
+
+    public Collection<String> allGames() {
+        return boards.keySet();
     }
 }

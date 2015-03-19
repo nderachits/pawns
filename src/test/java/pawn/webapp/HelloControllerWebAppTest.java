@@ -14,8 +14,10 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -42,6 +44,13 @@ public class HelloControllerWebAppTest {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(content().string( containsString("Pawns home")));
+    }
+
+    @Test
+    public void newGameRedirectsToGamePage() throws Exception {
+        mockMvc.perform(post("/new"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("/game/*"));
     }
 
 }

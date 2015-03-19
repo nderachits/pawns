@@ -3,7 +3,8 @@
  */
 
 window.onload = function () {
-    //alert("It's loaded with images!")
+    window.gameId=document.getElementById("gameId").textContent;
+    //alert("It's loaded with images! gameId: "+window.gameId);
     connectWebSocket();
 
     document.addEventListener("visibilitychange", updateVisibilityState);
@@ -23,7 +24,7 @@ function updateVisibilityState(event) {
 
 function connectWebSocket() {
 
-    window.ws = new WebSocket("ws://"+location.host+"/websocket");
+    window.ws = new WebSocket("ws://"+location.host+"/websocket?gameId="+window.gameId);
 
     window.ws.onopen = function() {
         console.log("Opened!");
@@ -52,13 +53,14 @@ function connectWebSocket() {
     };
 }
 
-function newgame() {
+function newgame() { //depricated, not used
     var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
     xmlhttp.open("POST", "/newgame");
     xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xmlhttp.send(JSON.stringify({}));
 }
 
+//not used
 function loadBoard() {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
@@ -68,7 +70,7 @@ function loadBoard() {
                 placePawns(obj.cells);
             }
         };
-    xmlhttp.open('GET', '/board', true);
+    xmlhttp.open('GET', "/board/"+window.gameId, true);
     xmlhttp.send();
 }
 
@@ -104,7 +106,7 @@ function moveListener(cellIndFrom, cellIndTo) {
     console.log("cellIndFrom: "+cellIndFrom+", cellIndTo: "+cellIndTo);
     //ajaxcall
     var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
-    xmlhttp.open("POST", "/move");
+    xmlhttp.open("POST", "/move/"+window.gameId);
     xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xmlhttp.send(JSON.stringify({from:cellIndFrom, to:cellIndTo}));
 }

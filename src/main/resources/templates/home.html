@@ -1,10 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Pawns home</title>
 </head>
 <body>
-<p>join</p>
-<p>new game</p>
+<p>join:</p>
+<p th:each="game : ${games}">
+<a th:href="@{'/game/'+${game}}" th:text="|game id: ${game}|">game1</a>
+</p>
+<form action="/new" method="post">
+<input type="submit" value="New game" />
+</form>
+
 </body>
 </html>

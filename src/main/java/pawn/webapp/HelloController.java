@@ -11,6 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import pawn.model.Board;
+import pawn.model.dao.BoardDaoInMemory;
 
 @Controller
 @ComponentScan
@@ -23,12 +26,21 @@ public class HelloController {
     @RequestMapping("/")
     public String home(Model model) {
         model.addAttribute("pawnversion", version);
+        model.addAttribute("games", new BoardDaoInMemory().allGames());
         return "home";
+    }
+
+    @RequestMapping(value = "/new", method = RequestMethod.POST)
+    public String newGame() {
+        String gameId = new BoardDaoInMemory().newGameId();
+        return "redirect:/game/"+gameId;
     }
 
     @RequestMapping("/game/{gameId}")
     public String game(@PathVariable String gameId, Model model) {
+        Board board = new BoardDaoInMemory().loadBoardById(gameId);
         model.addAttribute("pawnversion", version);
+        model.addAttribute("board", board);
         return "board";
     }
 
