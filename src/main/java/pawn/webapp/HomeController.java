@@ -13,16 +13,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import pawn.model.Board;
-import pawn.model.dao.BoardDao;
+import pawn.model.Game;
+import pawn.model.dao.GameDao;
 
 @Controller
 @ComponentScan("pawn")
 @EnableAutoConfiguration
-public class HelloController {
+public class HomeController {
 
     @Autowired
-    private BoardDao boardDao;
+    private GameDao gameDao;
 
     @Value("${app.version}")
     private String version;
@@ -30,26 +30,26 @@ public class HelloController {
     @RequestMapping("/")
     public String home(Model model) {
         model.addAttribute("pawnversion", version);
-        model.addAttribute("games", getBoardDao().allGames());
+        model.addAttribute("games", getGameDao().allGames());
         return "home";
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     public String newGame() {
-        String gameId = getBoardDao().newGameId();
+        String gameId = getGameDao().newGameId();
         return "redirect:/game/"+gameId;
     }
 
     @RequestMapping("/game/{gameId}")
     public String game(@PathVariable String gameId, Model model) {
-        Board board = getBoardDao().loadBoardById(gameId);
+        Game game = getGameDao().loadGameById(gameId);
         model.addAttribute("pawnversion", version);
-        model.addAttribute("board", board);
+        model.addAttribute("board", game);
         return "board";
     }
 
     public static void main(String[] args) throws Exception {
-        SpringApplication.run(HelloController.class, args);
+        SpringApplication.run(HomeController.class, args);
     }
 
     @Bean
@@ -61,11 +61,11 @@ public class HelloController {
         return p;
     }
 
-    public BoardDao getBoardDao() {
-        return boardDao;
+    public GameDao getGameDao() {
+        return gameDao;
     }
 
-    public void setBoardDao(BoardDao boardDao) {
-        this.boardDao = boardDao;
+    public void setGameDao(GameDao gameDao) {
+        this.gameDao = gameDao;
     }
 }

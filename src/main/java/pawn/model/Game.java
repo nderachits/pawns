@@ -3,13 +3,16 @@ package pawn.model;
 /**
  * Created by Mikalai_Dzerachyts on 2/18/2015.
  */
-public class Board {
+public class Game {
 
     public static final int PAWNS_IN_LINE = 3;
 
     private Cell[] cells;
 
-    public Board() {
+    private String gameId;
+
+    public Game(String gameId) {
+        this.gameId = gameId;
         cells = new Cell[]{ Cell.black,Cell.black,Cell.black,
                             Cell.empty,Cell.empty,Cell.empty,
                             Cell.white,Cell.white,Cell.white};
@@ -25,6 +28,10 @@ public class Board {
 
     public Cell[] cells() {
         return cells.clone();
+    }
+
+    public String getGameId() {
+        return gameId;
     }
 
     public void saveMove(int from, int to) {

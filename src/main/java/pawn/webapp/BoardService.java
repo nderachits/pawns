@@ -14,10 +14,9 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
-import pawn.model.Board;
-import pawn.model.dao.BoardDao;
-import pawn.model.dto.BoardDto;
-import pawn.model.dto.GameDTO;
+import pawn.model.Game;
+import pawn.model.dao.GameDao;
+import pawn.model.dto.GameDto;
 import pawn.model.dto.MoveDto;
 
 import java.io.IOException;
@@ -38,26 +37,28 @@ public class BoardService extends TextWebSocketHandler implements WebSocketConfi
     private Map<String, List<WebSocketSession>> sessionsMap = new HashMap<>();
 
     @Autowired
-    private BoardDao boardDao;
+    private GameDao gameDao;
 
     @RequestMapping("/board/{gameId}")
-    public BoardDto boardById(@PathVariable String gameId) {
-        Board board = getBoardDao().loadBoardById(gameId);
-        return new BoardDto(board.cells());
+    public GameDto boardById(@PathVariable String gameId) {
+        Game game = getGameDao().loadGameById(gameId);
+        return new GameDto(game);
     }
 
     @RequestMapping(value = "/move/{gameId}", method = RequestMethod.POST)
     public void move(@PathVariable String gameId, @RequestBody MoveDto param) throws JsonProcessingException {
-        Board board = getBoardDao().loadBoardById(gameId);
-        board.saveMove(param.getFrom(), param.getTo());
+        Game game = getGameDao().loadGameById(gameId);
+        game.saveMove(param.getFrom(), param.getTo());
         sendAll(gameId);
     }
 
     //not used
     @RequestMapping(value = "/newgameid", method = RequestMethod.POST)
-    public GameDTO newGameId() throws JsonProcessingException {
-        String gameId = getBoardDao().newGameId();
-        return new GameDTO(gameId);
+    public GameDto newGameId() throws JsonProcessingException {
+        String gameId = getGameDao().newGameId();
+        Game game = getGameDao().loadGameById(gameId);
+        GameDto gameDto = new GameDto(game);
+        return gameDto;
     }
 
     @Override
@@ -119,8 +120,8 @@ public class BoardService extends TextWebSocketHandler implements WebSocketConfi
             return;
         }
         ObjectMapper mapper = new ObjectMapper();
-        Board board = getBoardDao().loadBoardById(gameId);
-        String text = mapper.writeValueAsString(new BoardDto(board.cells()));
+        Game game = getGameDao().loadGameById(gameId);
+        String text = mapper.writeValueAsString(new GameDto(game));
         System.out.println("text to send: " + text);
         for (WebSocketSession session : sessionsList) {
             try {
@@ -131,11 +132,11 @@ public class BoardService extends TextWebSocketHandler implements WebSocketConfi
         }
     }
 
-    public BoardDao getBoardDao() {
-        return boardDao;
+    public GameDao getGameDao() {
+        return gameDao;
     }
 
-    public void setBoardDao(BoardDao boardDao) {
-        this.boardDao = boardDao;
+    public void setGameDao(GameDao gameDao) {
+        this.gameDao = gameDao;
     }
 }

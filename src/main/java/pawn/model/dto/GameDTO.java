@@ -1,20 +1,27 @@
 package pawn.model.dto;
 
+import pawn.model.Cell;
+import pawn.model.Game;
+
 /**
  * User: nike
- * Date: 3/18/15
+ * Date: 2/19/15
  */
-public class GameDTO {
-    private String gameId;
+public class GameDto {
 
-    public GameDTO() {
-    }
+    private final Cell[] cells;
+    private final String gameId;
 
-    public GameDTO(String gameId) {
-        this.gameId = gameId;
+    public GameDto(Game game) {
+        this.gameId = game.getGameId();
+        this.cells = game.cells();
     }
 
     public String getGameId() {
         return gameId;
+    }
+
+    public Cell[] getCells() {
+        return cells;
     }
 }

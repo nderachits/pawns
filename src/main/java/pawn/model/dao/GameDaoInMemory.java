@@ -2,7 +2,7 @@ package pawn.model.dao;
 
 import org.springframework.stereotype.Repository;
 import pawn.exceptions.GameNotFound;
-import pawn.model.Board;
+import pawn.model.Game;
 
 import java.util.*;
 
@@ -11,28 +11,28 @@ import java.util.*;
  * Date: 2/19/15
  */
 @Repository("boardDao")
-public class BoardDaoInMemory implements BoardDao {
+public class GameDaoInMemory implements GameDao {
 
     private static int nextGameId = 1;
-    private static Map<String, Board> boards = new LinkedHashMap<>();
+    private static Map<String, Game> games = new LinkedHashMap<>();
 
     @Override
     public String newGameId() {
         String gameId = "g"+nextGameId++;
-        boards.put(gameId, new Board());
+        games.put(gameId, new Game(gameId));
         return gameId;
     }
 
     @Override
-    public Board loadBoardById(String gameId) {
-        Board board1 = boards.get(gameId);
-        if(board1 == null) {
+    public Game loadGameById(String gameId) {
+        Game game1 = games.get(gameId);
+        if(game1 == null) {
             throw new GameNotFound("Game "+gameId+" is not found");
         }
-        return board1;
+        return game1;
     }
 
     public Collection<String> allGames() {
-        return boards.keySet();
+        return games.keySet();
     }
 }

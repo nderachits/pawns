@@ -16,10 +16,10 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import pawn.model.dto.MoveDto;
-import pawn.model.Board;
+import pawn.model.Game;
 import pawn.model.Cell;
-import pawn.model.dao.BoardDao;
-import pawn.model.dao.BoardDaoInMemory;
+import pawn.model.dao.GameDao;
+import pawn.model.dao.GameDaoInMemory;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasSize;
@@ -36,8 +36,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = HelloController.class, initializers = ConfigFileApplicationContextInitializer.class)
-public class BoardRestServiceWebTest {
+@ContextConfiguration(classes = HomeController.class, initializers = ConfigFileApplicationContextInitializer.class)
+public class GameRestServiceWebTest {
     @Autowired
     private WebApplicationContext wac;
 
@@ -47,8 +47,8 @@ public class BoardRestServiceWebTest {
 
     @Before
     public void setUp() throws Exception {
-        BoardDao boardDao = new BoardDaoInMemory();
-        gameId = boardDao.newGameId();
+        GameDao gameDao = new GameDaoInMemory();
+        gameId = gameDao.newGameId();
         mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
     }
 
@@ -66,9 +66,9 @@ public class BoardRestServiceWebTest {
 
     @Test
     public void modelChangesBoardJson() throws Exception {
-        BoardDao boardDao = new BoardDaoInMemory();
-        Board board = boardDao.loadBoardById(gameId);
-        board.saveMove(7, 4);
+        GameDao gameDao = new GameDaoInMemory();
+        Game game = gameDao.loadGameById(gameId);
+        game.saveMove(7, 4);
 
         mockMvc.perform(get("/board/"+gameId))
                 .andExpect(status().isOk())
@@ -87,12 +87,12 @@ public class BoardRestServiceWebTest {
                 .content( new ObjectMapper().writeValueAsString(new MoveDto(7,4))))
                 .andExpect(status().isOk());
 
-        BoardDao boardDao = new BoardDaoInMemory();
-        Board board = boardDao.loadBoardById(gameId);
+        GameDao gameDao = new GameDaoInMemory();
+        Game game = gameDao.loadGameById(gameId);
         assertArrayEquals(new Cell[]{
                 Cell.black, Cell.black, Cell.black,
                 Cell.empty, Cell.white, Cell.empty,
-                Cell.white, Cell.empty, Cell.white}, board.cells());
+                Cell.white, Cell.empty, Cell.white}, game.cells());
     }
 
     @Test
@@ -114,8 +114,8 @@ public class BoardRestServiceWebTest {
 
     @Test
     public void newGameResetsBoardJson() throws Exception {
-        Board board = new BoardDaoInMemory().loadBoardById(gameId);
-        board.saveMove(7, 4);
+        Game game = new GameDaoInMemory().loadGameById(gameId);
+        game.saveMove(7, 4);
 
         MvcResult mvcResult = mockMvc.perform(post("/newgameid")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -123,11 +123,11 @@ public class BoardRestServiceWebTest {
 
         String gameId2 = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.gameId");
 
-        Board anotherBoard = new BoardDaoInMemory().loadBoardById(gameId2);
+        Game anotherGame = new GameDaoInMemory().loadGameById(gameId2);
         assertArrayEquals(new Cell[]{
                 Cell.black, Cell.black, Cell.black,
                 Cell.empty, Cell.empty, Cell.empty,
-                Cell.white, Cell.white, Cell.white}, anotherBoard.cells());
+                Cell.white, Cell.white, Cell.white}, anotherGame.cells());
     }
 
     @Test

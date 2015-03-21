@@ -4,44 +4,44 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class BoardTest {
+public class GameTest {
 
-    private Board board = new Board();
+    private Game game = new Game("g1");
 
     @Test
     public void shouldReturnBoard() throws Exception {
 
-        assertNotNull(board);
-        assertEquals(9, board.size());
+        assertNotNull(game);
+        assertEquals(9, game.size());
         assertArrayEquals(new Cell[]{
                 Cell.black,Cell.black,Cell.black,
                 Cell.empty,Cell.empty,Cell.empty,
-                Cell.white,Cell.white,Cell.white}, board.cells());
+                Cell.white,Cell.white,Cell.white}, game.cells());
 
     }
 
     @Test
     public void moveUpdatesBoard() {
-        board.saveMove(6, 3);
+        game.saveMove(6, 3);
         assertArrayEquals(new Cell[]{
                 Cell.black, Cell.black, Cell.black,
                 Cell.white, Cell.empty, Cell.empty,
-                Cell.empty, Cell.white, Cell.white}, board.cells());
+                Cell.empty, Cell.white, Cell.white}, game.cells());
     }
 
     @Test
     public void attackRemovePawn() {
-        board.saveMove(6, 3);
-        board.saveMove(1, 3);
+        game.saveMove(6, 3);
+        game.saveMove(1, 3);
         assertArrayEquals(new Cell[]{
                 Cell.black, Cell.empty, Cell.black,
                 Cell.black, Cell.empty, Cell.empty,
-                Cell.empty, Cell.white, Cell.white}, board.cells());
+                Cell.empty, Cell.white, Cell.white}, game.cells());
     }
 
     @Test(expected = IllegalStateException.class)
     public void throwExceptionWhenStartingCellOfMoveIsEmpty() {
-        board.saveMove(3, 0);
+        game.saveMove(3, 0);
     }
 
 }

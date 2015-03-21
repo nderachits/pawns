@@ -1,14 +1,14 @@
 package pawn.model.dao;
 
-import pawn.model.Board;
+import pawn.model.Game;
 
 import java.util.Collection;
 
 /**
  * Created by Mikalai_Dzerachyts on 2/18/2015.
  */
-public interface BoardDao {
+public interface GameDao {
     String newGameId();
-    Board loadBoardById(String gameId);
+    Game loadGameById(String gameId);
     Collection<String> allGames();
 }
