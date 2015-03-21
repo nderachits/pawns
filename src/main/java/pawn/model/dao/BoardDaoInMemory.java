@@ -1,5 +1,6 @@
 package pawn.model.dao;
 
+import org.springframework.stereotype.Repository;
 import pawn.exceptions.GameNotFound;
 import pawn.model.Board;
 
@@ -9,6 +10,7 @@ import java.util.*;
  * User: nike
  * Date: 2/19/15
  */
+@Repository("boardDao")
 public class BoardDaoInMemory implements BoardDao {
 
     private static int nextGameId = 1;
