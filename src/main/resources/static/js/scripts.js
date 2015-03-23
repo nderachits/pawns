@@ -112,11 +112,13 @@ function moveListener(cellIndFrom, cellIndTo) {
 }
 
 function cellIndByPawn(pawn) {
+    console.log("pawn: "+pawn); //magic fix
     var top = getCssProperty(pawn, "top");
     var left = getCssProperty(pawn, "left");
     var topInt = top.substr(0, top.length-"px".length);
     var leftInt = left.substr(0, left.length-"px".length);
     var id = Math.floor(topInt/53)*3 + Math.floor(leftInt/53);
+    console.log("cellIndByPawn "+pawn.id+", top: "+top+", left: "+left+", topInt: "+topInt+", leftInt: "+leftInt+", id: "+id);
     return id;
 }
 
@@ -175,7 +177,9 @@ function drop(ev) {
 }
 
 function calcTopFromId(id) {
-    return Math.floor(id/3)*53;
+    var top = Math.floor(id/3)*53;
+    console.log("calcTopFromId "+id+", ret: "+top);
+    return top;
 }
 
 function calcLeftFromId(id) {

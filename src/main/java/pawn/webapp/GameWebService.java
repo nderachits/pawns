@@ -32,7 +32,7 @@ import java.util.Map;
 
 @RestController
 @EnableWebSocket
-public class BoardService extends TextWebSocketHandler implements WebSocketConfigurer {
+public class GameWebService extends TextWebSocketHandler implements WebSocketConfigurer {
 
     private Map<String, List<WebSocketSession>> sessionsMap = new HashMap<>();
 
@@ -49,6 +49,7 @@ public class BoardService extends TextWebSocketHandler implements WebSocketConfi
     public void move(@PathVariable String gameId, @RequestBody MoveDto param) throws JsonProcessingException {
         Game game = getGameDao().loadGameById(gameId);
         game.saveMove(param.getFrom(), param.getTo());
+        System.out.println("Game: "+gameId+", move from "+param.getFrom()+" to "+param.getTo());
         sendAll(gameId);
     }
 
