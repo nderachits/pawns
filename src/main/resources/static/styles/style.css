@@ -78,6 +78,52 @@ body {
     display: none;
 }
 
+.poscell0 {
+    top: 0;
+    left: 0;
+}
+
+.poscell1 {
+    top: 0;
+    left: 53px;
+}
+
+.poscell2 {
+    top: 0;
+    left: 106px;
+}
+
+.poscell3 {
+    top: 53px;
+    left: 0px;
+}
+
+.poscell4 {
+    top: 53px;
+    left: 53px;
+}
+
+.poscell5 {
+    top: 53px;
+    left: 106px;
+}
+
+.poscell6 {
+    top: 106px;
+    left: 0px;
+}
+
+.poscell7 {
+    top: 106px;
+    left: 53px;
+}
+
+.poscell8 {
+    top: 106px;
+    left: 106px;
+}
+
+
 .pawnselected {
     opacity: 0.3;
 }

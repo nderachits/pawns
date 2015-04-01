@@ -32,7 +32,7 @@ function connectWebSocket() {
 
     window.ws.onmessage = function (evt) {
         var obj = JSON.parse(evt.data);
-        console.log("cells: " + obj.cells);
+        console.log("cells from websocket: " + obj.cells);
         clearAllPawns();
         placePawns(obj.cells);
     };
@@ -66,7 +66,7 @@ function loadBoard() {
     xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState==4 && xmlhttp.status==200) {
                 var obj = JSON.parse(xmlhttp.responseText);
-                console.log("cells: " + obj.cells);
+                console.log("cells from rest: " + obj.cells);
                 placePawns(obj.cells);
             }
         };
@@ -80,10 +80,10 @@ function placePawns(cells) {
     for(var i=0; i<9; i++) {
         var cellId = "cell"+i;
         if(cells[i] === "black") {
-            var pawnId = blackIds.pop();
+            var pawnId = blackIds.shift();
             placePawn(pawnId, cellId);
         } else if( cells[i] == "white") {
-            var pawnId = whiteIds.pop();
+            var pawnId = whiteIds.shift();
             placePawn(pawnId, cellId);
         }
     }
@@ -112,14 +112,10 @@ function moveListener(cellIndFrom, cellIndTo) {
 }
 
 function cellIndByPawn(pawn) {
-    console.log("pawn: "+pawn); //magic fix
-    var top = getCssProperty(pawn, "top");
-    var left = getCssProperty(pawn, "left");
-    var topInt = top.substr(0, top.length-"px".length);
-    var leftInt = left.substr(0, left.length-"px".length);
-    var id = Math.floor(topInt/53)*3 + Math.floor(leftInt/53);
-    console.log("cellIndByPawn "+pawn.id+", top: "+top+", left: "+left+", topInt: "+topInt+", leftInt: "+leftInt+", id: "+id);
-    return id;
+    var cellClass = pawn.className.match(/\bposcell\d+\b/);
+    var cellInd = cellClass[0].substring("poscell".length);
+    console.log("cellIndByPawn pawn: "+pawn+", return: "+cellInd);
+    return cellInd;
 }
 
 function allowDrop(ev) {
@@ -136,58 +132,51 @@ function getCssProperty(elem, property){
 
 function moveToPawn(pawnToMove, targetPawn) {
     moveListener(cellIndByPawn(pawnToMove), cellIndByPawn(targetPawn));
-    console.log("moving "+pawnToMove.id+" to "+targetPawn.id);
-    pawnToMove.style.top = getCssProperty(targetPawn, "top");
-    pawnToMove.style.left = getCssProperty(targetPawn, "left");
+    console.log("moveToPawn from  pawn "+pawnToMove.id+" to pawn "+targetPawn.id);
+    var cellClass = targetPawn.className.match(/\bposcell\d+\b/);
+    pawnToMove.className = pawnToMove.className.replace(/\bposcell\d+\b/,'');
+    pawnToMove.classList.add(cellClass);
 }
 
 function dropToImage(ev) {
     ev.preventDefault();
-    console.log("drop img: "+ev.target.id);
     var data = ev.dataTransfer.getData("text");
 
     if(ev.target.id === data) {
         return;
     }
+    console.log("drop pawn "+ev.target.id + " to pawn "+data);
 
     moveToPawn(document.getElementById(data), ev.target);
     clearPawn(ev.target);
 }
 
 function drag(ev) {
-    console.log("moving img: "+ev.target.id);
+    console.log("drag pawn: "+ev.target.id);
     ev.dataTransfer.setData("text", ev.target.id);
 }
 
 function moveToCell(pawn, cellId) {
-    console.log("cellId: "+cellId);
+    console.log("moveToCell: pawn "+pawn.id+" to "+cellId);
     var cellNum = cellId.substring("cell".length) ;
-    pawn.style.top = "" + calcTopFromId(cellNum) + "px";
-    pawn.style.left = "" + calcLeftFromId(cellNum) + "px";
+
+    pawn.className = pawn.className.replace(/\bposcell\d+\b/,'');
+    pawn.classList.add("pos" + cellId);
+    console.log("pawn "+pawn.id+" classList: "+pawn.classList);
 }
 
 function drop(ev) {
     ev.preventDefault();
     var data = ev.dataTransfer.getData("text");
-    console.log("move img: "+ev.target.id+", data: "+data);
+    console.log("drop: pawn "+data+" to cell "+ev.target.id);
     var pawn = document.getElementById(data);
 
     moveListener(cellIndByPawn(pawn), ev.target.id.substring("cell".length));
     moveToCell(pawn, ev.target.id);
 }
 
-function calcTopFromId(id) {
-    var top = Math.floor(id/3)*53;
-    console.log("calcTopFromId "+id+", ret: "+top);
-    return top;
-}
-
-function calcLeftFromId(id) {
-    return (id%3)*53;
-}
-
 function clearPawn(el) {
-    console.log("clear img: "+el.id);
+    console.log("clear: pawn "+el.id);
     el.style.display = "none";
 }
 
@@ -200,7 +189,7 @@ function getSelectedPawn() {
     }
 }
 function pawnClick(el) {
-    console.log("click: "+ el.id);
+    console.log("click: at pawn "+ el.id);
     var selectedPawn = getSelectedPawn();
     console.log("selectedPawn: "+selectedPawn);
     if(selectedPawn) {
@@ -215,7 +204,7 @@ function pawnClick(el) {
 }
 
 function moveClick(cell) {
-    console.log("cell click "+cell.id);
+    console.log("moveClick: at cell "+cell.id);
     var selectedPawn = getSelectedPawn();
     if(selectedPawn) {
         moveListener(cellIndByPawn(selectedPawn), cell.id.substring("cell".length));
