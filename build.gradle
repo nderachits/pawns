@@ -31,6 +31,7 @@ dependencies {
         exclude module: "spring-boot-starter-tomcat"
     }
     compile("org.springframework.boot:spring-boot-starter-jetty")
+    compile("org.springframework.boot:spring-boot-starter-security")
     compile("org.springframework.mobile:spring-mobile-device")
     compile("org.springframework:spring-websocket")
     compile("org.thymeleaf:thymeleaf-spring4")
