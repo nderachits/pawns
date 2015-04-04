@@ -36,19 +36,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public UserDetailsManager getUserDetailsManager() {
+    public UserDetailsManager userDetailsManager() {
+        userDetailsManager = new InMemoryUserDetailsManager(Collections.<UserDetails>emptyList());
         return userDetailsManager;
     }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception{
-//        auth
-//                .inMemoryAuthentication()
-//                    .withUser("user").password("password").roles("USER");
-
-        userDetailsManager = new InMemoryUserDetailsManager(Collections.<UserDetails>emptyList());
-        UserDetails user = new User("user", "password", Arrays.<GrantedAuthority>asList(new SimpleGrantedAuthority("USER")));
-        System.out.println("Config Spring Security");
-        userDetailsManager.createUser(user);
+        UserDetails user = new User("nike", "password", Arrays.<GrantedAuthority>asList(new SimpleGrantedAuthority("ROLE_USER")));
+        userDetailsManager().createUser(user);
+        auth.userDetailsService(userDetailsManager());
     }
 }
