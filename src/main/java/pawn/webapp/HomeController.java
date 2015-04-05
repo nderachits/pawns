@@ -1,6 +1,8 @@
 package pawn.webapp;
 
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -27,6 +29,8 @@ public class HomeController {
     @Value("${app.version}")
     private String version;
 
+    private final Log log = LogFactory.getLog(getClass());
+
     @RequestMapping("/")
     public String home(Model model) {
         model.addAttribute("pawnversion", version);
@@ -37,6 +41,7 @@ public class HomeController {
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     public String newGame() {
         String gameId = getGameDao().newGameId();
+        log.info("new game id: "+gameId);
         return "redirect:/game/"+gameId;
     }
 

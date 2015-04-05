@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.ConfigFileApplicationContextInitializer;
+import org.springframework.core.env.Environment;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -13,6 +14,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -30,6 +32,9 @@ public class HomeControllerWebAppTest {
 
     @Autowired
     private WebApplicationContext wac;
+
+    @Autowired
+    private Environment environment;
 
     private MockMvc mockMvc;
 
@@ -50,6 +55,11 @@ public class HomeControllerWebAppTest {
         mockMvc.perform(post("/new"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("/game/*"));
+    }
+
+    @Test
+    public void propertiesAreAvailableForTest() {
+        assertNotNull(environment.getProperty("app.version"));
     }
 
 }
