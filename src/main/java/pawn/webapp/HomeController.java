@@ -58,6 +58,11 @@ public class HomeController {
         return "board";
     }
 
+    @RequestMapping(value = "/register", method = RequestMethod.GET)
+    public String register() {
+        return "register";
+    }
+
     public static void main(String[] args) throws Exception {
         SpringApplication.run(HomeController.class, args);
     }

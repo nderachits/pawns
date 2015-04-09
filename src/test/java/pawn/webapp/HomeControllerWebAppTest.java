@@ -1,5 +1,11 @@
 package pawn.webapp;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,14 +18,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * User: Mikalai_Dzerachyts
@@ -55,6 +53,12 @@ public class HomeControllerWebAppTest {
         mockMvc.perform(post("/new"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("/game/*"));
+    }
+
+    @Test
+    public void registerCreatesNewUser() throws Exception{
+        mockMvc.perform(get("/register"))
+                .andExpect(status().isOk());
     }
 
     @Test
