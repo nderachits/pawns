@@ -12,6 +12,8 @@
 <input type="submit" value="New game" />
 </form>
 
+<a th:href="@{/register}">Sign up</a>
+<a th:href="@{/login}">Sign in</a>
 <h3 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h3>
 <form th:action="@{/logout}" method="post">
     <input type="submit" value="Sign Out"/>

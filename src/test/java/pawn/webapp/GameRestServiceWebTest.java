@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = HomeController.class, initializers = ConfigFileApplicationContextInitializer.class)
+@ContextConfiguration(classes = PawnApplication.class, initializers = ConfigFileApplicationContextInitializer.class)
 public class GameRestServiceWebTest {
     @Autowired
     private WebApplicationContext wac;

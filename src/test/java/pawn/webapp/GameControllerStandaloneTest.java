@@ -14,15 +14,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * User: Mikalai_Dzerachyts
  * Date: 8/28/14
  */
-public class HomeControllerStandaloneTest {
+public class GameControllerStandaloneTest {
 
     private MockMvc mockMvc;
 
     @Before
     public void setUp() throws Exception {
-        HomeController homeController = new HomeController();
-        homeController.setGameDao(new GameDaoInMemory());
-        mockMvc = MockMvcBuilders.standaloneSetup(homeController).build();
+        GameController gameController = new GameController();
+        gameController.setGameDao(new GameDaoInMemory());
+        mockMvc = MockMvcBuilders.standaloneSetup(gameController).build();
     }
 
     @Test

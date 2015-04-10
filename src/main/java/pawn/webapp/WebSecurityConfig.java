@@ -29,10 +29,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/").permitAll()
+                .antMatchers("/", "/register").permitAll()
                 .antMatchers("/**").hasRole("USER")
                 .and()
-                .formLogin();
+                .formLogin()
+                .and().logout().logoutSuccessUrl("/");
     }
 
     @Bean

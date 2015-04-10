@@ -12,6 +12,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.ConfigFileApplicationContextInitializer;
 import org.springframework.core.env.Environment;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -25,14 +27,17 @@ import org.springframework.web.context.WebApplicationContext;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = HomeController.class, initializers = ConfigFileApplicationContextInitializer.class)
-public class HomeControllerWebAppTest {
+@ContextConfiguration(classes = PawnApplication.class, initializers = ConfigFileApplicationContextInitializer.class)
+public class GameControllerWebAppTest {
 
     @Autowired
     private WebApplicationContext wac;
 
     @Autowired
     private Environment environment;
+
+    @Autowired
+    private UserDetailsManager userDetailsManager;
 
     private MockMvc mockMvc;
 
@@ -59,6 +64,16 @@ public class HomeControllerWebAppTest {
     public void registerCreatesNewUser() throws Exception{
         mockMvc.perform(get("/register"))
                 .andExpect(status().isOk());
+
+        mockMvc.perform(post("/register")
+                    .param("userName", "newUser1")
+                    .param("password", "password")
+                    .param("passwordAgain", "password"))
+                .andExpect(status().is3xxRedirection());
+
+
+        UserDetails userDetails = userDetailsManager.loadUserByUsername("newUser1");
+        assertNotNull(userDetails);
     }
 
     @Test
