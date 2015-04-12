@@ -36,6 +36,7 @@ public class GameControllerWebAppTest {
     @Autowired
     private Environment environment;
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private UserDetailsManager userDetailsManager;
 

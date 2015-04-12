@@ -1,5 +1,7 @@
 package pawn.model;
 
+import pawn.exceptions.MoveNotAllowedException;
+
 /**
  * Created by Mikalai_Dzerachyts on 2/18/2015.
  */
@@ -10,6 +12,10 @@ public class Game {
     private Cell[] cells;
 
     private String gameId;
+
+    private String whitePlayer;
+
+    private String blackPlayer;
 
     public Game(String gameId) {
         this.gameId = gameId;
@@ -41,4 +47,34 @@ public class Game {
         cells[to] = cells[from];
         cells[from] = Cell.empty;
     }
+
+    public void saveMove(int from, int to, String user1) {
+        if(user1 == null || (!user1.equals(whitePlayer) && !user1.equals(blackPlayer))) {
+            throw new MoveNotAllowedException("User "+user1+" is not a player in game "+gameId);
+        }
+        saveMove(from, to);
+    }
+
+    public String getWhitePlayer() {
+        return whitePlayer;
+    }
+
+    public void setWhitePlayer(String whitePlayer) {
+        if(whitePlayer != null && whitePlayer.equals(blackPlayer)) {
+            throw new IllegalStateException("Players are not unique");
+        }
+        this.whitePlayer = whitePlayer;
+    }
+
+    public String getBlackPlayer() {
+        return blackPlayer;
+    }
+
+    public void setBlackPlayer(String blackPlayer) {
+        if(blackPlayer != null && blackPlayer.equals(whitePlayer)) {
+            throw new IllegalStateException("Players are not unique");
+        }
+        this.blackPlayer = blackPlayer;
+    }
+
 }
