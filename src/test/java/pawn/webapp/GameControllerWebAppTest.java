@@ -1,6 +1,7 @@
 package pawn.webapp;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -14,12 +15,16 @@ import org.springframework.boot.test.ConfigFileApplicationContextInitializer;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.UserDetailsManager;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import pawn.model.Game;
+import pawn.model.dao.GameDaoInMemory;
 
 /**
  * User: Mikalai_Dzerachyts
@@ -55,10 +60,16 @@ public class GameControllerWebAppTest {
     }
 
     @Test
+    @WithMockUser("user1")
     public void newGameRedirectsToGamePage() throws Exception {
-        mockMvc.perform(post("/new"))
+        MvcResult mvcResult =mockMvc.perform(post("/new"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrlPattern("/game/*"));
+                .andExpect(redirectedUrlPattern("/game/*")).andReturn();
+
+        String gameId = mvcResult.getResponse().getRedirectedUrl().substring("/game/".length());
+        Game game = new GameDaoInMemory().loadGameById(gameId);
+        assertNotNull(game);
+        assertEquals("user1", game.getWhitePlayer());
     }
 
     @Test

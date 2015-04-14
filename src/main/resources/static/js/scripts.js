@@ -109,6 +109,11 @@ function moveListener(cellIndFrom, cellIndTo) {
     xmlhttp.open("POST", "/move/"+window.gameId);
     xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xmlhttp.send(JSON.stringify({from:cellIndFrom, to:cellIndTo}));
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState==4 && xmlhttp.status!==200) {
+            alert("Server error!");
+        }
+    };
 }
 
 function cellIndByPawn(pawn) {

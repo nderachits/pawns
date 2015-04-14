@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.ConfigFileApplicationContextInitializer;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -68,7 +69,8 @@ public class GameRestServiceWebTest {
     public void modelChangesBoardJson() throws Exception {
         GameDao gameDao = new GameDaoInMemory();
         Game game = gameDao.loadGameById(gameId);
-        game.saveMove(7, 4);
+        game.setWhitePlayer("user1");
+        game.saveMove(7, 4, "user1");
 
         mockMvc.perform(get("/board/"+gameId))
                 .andExpect(status().isOk())
@@ -81,14 +83,16 @@ public class GameRestServiceWebTest {
     }
 
     @Test
+    @WithMockUser("user1")
     public void saveMoveViaRestChangesBoardModel() throws Exception {
+        Game game = new GameDaoInMemory().loadGameById(gameId);
+        game.setWhitePlayer("user1");
         mockMvc.perform(post("/move/"+gameId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content( new ObjectMapper().writeValueAsString(new MoveDto(7,4))))
                 .andExpect(status().isOk());
 
-        GameDao gameDao = new GameDaoInMemory();
-        Game game = gameDao.loadGameById(gameId);
+        game = new GameDaoInMemory().loadGameById(gameId);
         assertArrayEquals(new Cell[]{
                 Cell.black, Cell.black, Cell.black,
                 Cell.empty, Cell.white, Cell.empty,
@@ -96,7 +100,10 @@ public class GameRestServiceWebTest {
     }
 
     @Test
+    @WithMockUser("user1")
     public void saveMoveViaRestChangesBoardJson() throws Exception {
+        Game game = new GameDaoInMemory().loadGameById(gameId);
+        game.setWhitePlayer("user1");
         mockMvc.perform(post("/move/"+gameId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content( new ObjectMapper().writeValueAsString(new MoveDto(7,4))))
@@ -115,7 +122,8 @@ public class GameRestServiceWebTest {
     @Test
     public void newGameResetsBoardJson() throws Exception {
         Game game = new GameDaoInMemory().loadGameById(gameId);
-        game.saveMove(7, 4);
+        game.setWhitePlayer("user1");
+        game.saveMove(7, 4, "user1");
 
         MvcResult mvcResult = mockMvc.perform(post("/newgameid")
                 .contentType(MediaType.APPLICATION_JSON))

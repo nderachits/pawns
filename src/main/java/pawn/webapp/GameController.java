@@ -42,8 +42,8 @@ public class GameController {
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     public String newGame() {
         String gameId = gameDao.newGameId();
-//        Game game = gameDao.loadGameById(gameId);
-//        game.setWhitePlayer(WebSecurityConfig.getCurrentUser());
+        Game game = gameDao.loadGameById(gameId);
+        game.setWhitePlayer(WebSecurityConfig.getCurrentUser());
         log.info("new game id: " + gameId);
         return "redirect:/game/"+gameId;
     }

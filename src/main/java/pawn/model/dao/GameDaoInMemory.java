@@ -10,7 +10,7 @@ import java.util.*;
  * User: nike
  * Date: 2/19/15
  */
-@Repository("boardDao")
+@Repository("gameDao")
 public class GameDaoInMemory implements GameDao {
 
     private static int nextGameId = 1;

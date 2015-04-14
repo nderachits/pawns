@@ -48,7 +48,8 @@ public class GameWebService extends TextWebSocketHandler implements WebSocketCon
     @RequestMapping(value = "/move/{gameId}", method = RequestMethod.POST)
     public void move(@PathVariable String gameId, @RequestBody MoveDto param) throws JsonProcessingException {
         Game game = getGameDao().loadGameById(gameId);
-        game.saveMove(param.getFrom(), param.getTo());
+        String user = WebSecurityConfig.getCurrentUser();
+        game.saveMove(param.getFrom(), param.getTo(), user);
         System.out.println("Game: "+gameId+", move from "+param.getFrom()+" to "+param.getTo());
         sendAll(gameId);
     }
