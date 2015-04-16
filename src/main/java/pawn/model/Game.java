@@ -17,11 +17,14 @@ public class Game {
 
     private String blackPlayer;
 
+    private boolean nextMoveWhite;
+
     public Game(String gameId) {
         this.gameId = gameId;
         cells = new Cell[]{ Cell.black,Cell.black,Cell.black,
                             Cell.empty,Cell.empty,Cell.empty,
                             Cell.white,Cell.white,Cell.white};
+        nextMoveWhite = true;
     }
 
     public int size() {
@@ -43,6 +46,7 @@ public class Game {
     private void saveMove(int from, int to) {
         cells[to] = cells[from];
         cells[from] = Cell.empty;
+        nextMoveWhite = !nextMoveWhite;
     }
 
     public void saveMove(int from, int to, String user1) {
@@ -57,6 +61,9 @@ public class Game {
         }
         if(user1.equals(getBlackPlayer()) && cellAt(from) != Cell.black ) {
             throw new MoveNotAllowedException("Black player only allowed to move black pawns");
+        }
+        if(!isMyMoveNext(user1)) {
+            throw new MoveNotAllowedException("It is opponents turn. You are "+user1+", but turn is "+(nextMoveWhite?"white":"black")+" player");
         }
         saveMove(from, to);
     }
@@ -85,5 +92,10 @@ public class Game {
 
     public boolean isJoinAvailableFor(String user) {
         return (whitePlayer == null || blackPlayer == null) && !user.equals(whitePlayer) && !user.equals(blackPlayer) ;
+    }
+
+    public boolean isMyMoveNext(String user) {
+        return (user.equals(whitePlayer) && nextMoveWhite) ||
+                (user.equals(blackPlayer) && !nextMoveWhite);
     }
 }

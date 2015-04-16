@@ -24,8 +24,8 @@ public class GameDaoInMemoryTest {
     public void daoInMemoryStoresBoard() throws Exception {
         String gameId = gameDao.newGameId();
         Game game = gameDao.loadGameById(gameId);
-        game.setBlackPlayer("user1");
-        game.saveMove(1, 4, "user1");
+        game.setWhitePlayer("user1");
+        game.saveMove(7, 4, "user1");
         GameDao anotherGameDao = new GameDaoInMemory();
         assertArrayEquals(game.cells(), anotherGameDao.loadGameById(gameId).cells());
     }
@@ -34,14 +34,14 @@ public class GameDaoInMemoryTest {
     public void newGameResetsField() {
         String gameId = gameDao.newGameId();
         Game game = gameDao.loadGameById(gameId);
-        game.setBlackPlayer("user1");
-        game.saveMove(1, 4, "user1");
+        game.setWhitePlayer("user1");
+        game.saveMove(7, 4, "user1");
 
         Game game2 = gameDao.loadGameById(gameDao.newGameId());
         assertArrayEquals(new Cell[]{
-                Cell.black, Cell.empty, Cell.black,
-                Cell.empty, Cell.black, Cell.empty,
-                Cell.white, Cell.white, Cell.white}, game.cells());
+                Cell.black, Cell.black, Cell.black,
+                Cell.empty, Cell.white, Cell.empty,
+                Cell.white, Cell.empty, Cell.white}, game.cells());
         assertArrayEquals(new Cell[]{
                 Cell.black, Cell.black, Cell.black,
                 Cell.empty, Cell.empty, Cell.empty,

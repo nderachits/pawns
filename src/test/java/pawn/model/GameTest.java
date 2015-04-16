@@ -94,6 +94,19 @@ public class GameTest {
         assertFalse(game4.isJoinAvailableFor("user1"));
     }
 
+    @Test
+    public void oneMoveAtATime() {
+        assertTrue(game.isMyMoveNext("user1"));
+        assertFalse(game.isMyMoveNext("user2"));
+        game.saveMove(6, 3, "user1");
+        assertTrue(game.isMyMoveNext("user2"));
+        assertFalse(game.isMyMoveNext("user1"));
+    }
+
+    @Test(expected = MoveNotAllowedException.class)
+    public void moveAtOpponentsTurnThrows() {
+        game.saveMove(0, 3, "user1");
+    }
 }
 
 
