@@ -40,17 +40,23 @@ public class Game {
         return gameId;
     }
 
-    public void saveMove(int from, int to) {
-        if(cells[from] == Cell.empty) {
-            throw new IllegalStateException("Start cell of move is empty. from: "+from+", to: "+to);
-        }
+    private void saveMove(int from, int to) {
         cells[to] = cells[from];
         cells[from] = Cell.empty;
     }
 
     public void saveMove(int from, int to, String user1) {
+        if(cells[from] == Cell.empty) {
+            throw new IllegalStateException("Start cell of move is empty. from: "+from+", to: "+to);
+        }
         if(user1 == null || (!user1.equals(whitePlayer) && !user1.equals(blackPlayer))) {
             throw new MoveNotAllowedException("User "+user1+" is not a player in game "+gameId);
+        }
+        if(user1.equals(getWhitePlayer()) && cellAt(from) != Cell.white ) {
+            throw new MoveNotAllowedException("White player only allowed to move white pawns");
+        }
+        if(user1.equals(getBlackPlayer()) && cellAt(from) != Cell.black ) {
+            throw new MoveNotAllowedException("Black player only allowed to move black pawns");
         }
         saveMove(from, to);
     }
@@ -77,4 +83,7 @@ public class Game {
         this.blackPlayer = blackPlayer;
     }
 
+    public boolean isJoinAvailableFor(String user) {
+        return (whitePlayer == null || blackPlayer == null) && !user.equals(whitePlayer) && !user.equals(blackPlayer) ;
+    }
 }

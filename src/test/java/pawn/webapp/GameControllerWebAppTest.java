@@ -13,9 +13,11 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.ConfigFileApplicationContextInitializer;
 import org.springframework.core.env.Environment;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.UserDetailsManager;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -25,6 +27,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import pawn.model.Game;
 import pawn.model.dao.GameDaoInMemory;
+
+import java.util.Arrays;
 
 /**
  * User: Mikalai_Dzerachyts
@@ -56,13 +60,14 @@ public class GameControllerWebAppTest {
     public void testGreeting() throws Exception {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
-                .andExpect(content().string( containsString("Pawns home")));
+                .andExpect(content().string(containsString("Pawns home")));
     }
 
     @Test
-    @WithMockUser("user1")
     public void newGameRedirectsToGamePage() throws Exception {
-        MvcResult mvcResult =mockMvc.perform(post("/new"))
+        authenticateAs("user1");
+
+        MvcResult mvcResult = mockMvc.perform(post("/new"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("/game/*")).andReturn();
 
@@ -70,6 +75,35 @@ public class GameControllerWebAppTest {
         Game game = new GameDaoInMemory().loadGameById(gameId);
         assertNotNull(game);
         assertEquals("user1", game.getWhitePlayer());
+    }
+
+    private void authenticateAs(String user) {
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, "password",
+                Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
+        SecurityContextHolder.getContext().setAuthentication(auth);
+    }
+
+    @Test
+    public void joinAddsTheSecondPlayer() throws Exception{
+        authenticateAs("user1");
+        MvcResult mvcResult = mockMvc.perform(post("/new"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("/game/*")).andReturn();
+
+        String gameId = mvcResult.getResponse().getRedirectedUrl().substring("/game/".length());
+
+        authenticateAs("user2");
+        MvcResult mvcResult2 =mockMvc.perform(post("/join/" + gameId))
+                .andExpect(status().is3xxRedirection())
+                .andReturn();
+        String gameIdFromJoin = mvcResult.getResponse().getRedirectedUrl().substring("/game/".length());
+
+        assertEquals(gameId, gameIdFromJoin);
+
+        Game game = new GameDaoInMemory().loadGameById(gameId);
+        assertNotNull(game);
+        assertEquals("user1", game.getWhitePlayer());
+        assertEquals("user2", game.getBlackPlayer());
     }
 
     @Test

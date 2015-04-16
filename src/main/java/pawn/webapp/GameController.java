@@ -48,11 +48,20 @@ public class GameController {
         return "redirect:/game/"+gameId;
     }
 
+    @RequestMapping(value = "/join/{gameId}", method = RequestMethod.POST)
+    public String join(@PathVariable String gameId, Model model) {
+        Game game = gameDao.loadGameById(gameId);
+        game.setBlackPlayer(WebSecurityConfig.getCurrentUser());
+        log.info("join game id: " + gameId);
+        return "redirect:/game/"+gameId;
+    }
+
     @RequestMapping("/game/{gameId}")
     public String game(@PathVariable String gameId, Model model) {
         Game game = gameDao.loadGameById(gameId);
         model.addAttribute("pawnversion", version);
-        model.addAttribute("board", game);
+        model.addAttribute("game", game);
+        model.addAttribute("joinAvailable", game.isJoinAvailableFor(WebSecurityConfig.getCurrentUser()));
         return "board";
     }
 

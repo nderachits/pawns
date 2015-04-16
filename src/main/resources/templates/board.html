@@ -14,8 +14,14 @@
     <div class="header-text" >Pawns game</div>
 </div>
 <div class="gamearea">
-    <span th:text="'gameId: '+${gameId}"></span>
+    <span th:text="'gameId: '+${gameId}"></span> |
+    <span th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</span> |
     <a href="/" class="newgame">Home</a>
+    <div th:if="${joinAvailable}">
+        <form th:action="'/join/'+${gameId}" method="post">
+            <input type="submit" value="Join"/>
+        </form>
+    </div>
     <div class="gamefield" >
         <table >
             <tr>

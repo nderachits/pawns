@@ -18,13 +18,13 @@ public class GameTest {
 
     @Test
     public void shouldReturnBoard() throws Exception {
-
+        assertFalse(game.isJoinAvailableFor("user1"));
         assertNotNull(game);
         assertEquals(9, game.size());
         assertArrayEquals(new Cell[]{
-                Cell.black,Cell.black,Cell.black,
-                Cell.empty,Cell.empty,Cell.empty,
-                Cell.white,Cell.white,Cell.white}, game.cells());
+                Cell.black, Cell.black, Cell.black,
+                Cell.empty, Cell.empty, Cell.empty,
+                Cell.white, Cell.white, Cell.white}, game.cells());
 
     }
 
@@ -40,7 +40,7 @@ public class GameTest {
     @Test
     public void attackRemovePawn() {
         game.saveMove(6, 3, "user1");
-        game.saveMove(1, 3, "user1");
+        game.saveMove(1, 3, "user2");
         assertArrayEquals(new Cell[]{
                 Cell.black, Cell.empty, Cell.black,
                 Cell.black, Cell.empty, Cell.empty,
@@ -70,6 +70,30 @@ public class GameTest {
     public void moveThrowsForNonPlayer() {
         game.saveMove(6, 3, "user3");
     }
+
+    @Test(expected = MoveNotAllowedException.class)
+    public void whiteMoveThrowsForBlackPawn() {
+        game.saveMove(0, 3, "user1");
+    }
+
+    @Test(expected = MoveNotAllowedException.class)
+    public void blackMoveThrowsForWhitePawn() {
+        game.saveMove(6, 3, "user2");
+    }
+
+    @Test
+    public void gameWithOnePlayerIsJoinAvalable() {
+        Game game2 = new Game("g2");
+        game2.setBlackPlayer("user1");
+        assertTrue(game2.isJoinAvailableFor("user2"));
+        Game game3 = new Game("g3");
+        game3.setWhitePlayer("user1");
+        assertTrue(game3.isJoinAvailableFor("user2"));
+        Game game4 = new Game("g4");
+        game4.setWhitePlayer("user1");
+        assertFalse(game4.isJoinAvailableFor("user1"));
+    }
+
 }
 
 

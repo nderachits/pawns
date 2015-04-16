@@ -4,20 +4,20 @@
     <title>Pawns home</title>
 </head>
 <body>
-<p>join:</p>
-<p th:each="game : ${games}">
+<p>games:</p>
+<div th:each="game : ${games}">
 <a th:href="@{'/game/'+${game}}" th:text="|game id: ${game}|">game1</a>
-</p>
+</div>
 <form action="/new" method="post">
 <input type="submit" value="New game" />
 </form>
-
-<a th:href="@{/register}">Sign up</a>
-<a th:href="@{/login}">Sign in</a>
-<h3 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h3>
-<form th:action="@{/logout}" method="post">
+<p>
+<a th:unless="${#httpServletRequest.remoteUser}" th:href="@{/login}">Sign in</a>
+<a th:unless="${#httpServletRequest.remoteUser}" th:href="@{/register}">Sign up</a>
+<div th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</div>
+<form th:if="${#httpServletRequest.remoteUser}" th:action="@{/logout}" method="post">
     <input type="submit" value="Sign Out"/>
 </form>
-
+</p>
 </body>
 </html>
