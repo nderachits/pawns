@@ -60,7 +60,6 @@ function newgame() { //depricated, not used
     xmlhttp.send(JSON.stringify({}));
 }
 
-//not used
 function loadBoard() {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
@@ -111,7 +110,8 @@ function moveListener(cellIndFrom, cellIndTo) {
     xmlhttp.send(JSON.stringify({from:cellIndFrom, to:cellIndTo}));
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState==4 && xmlhttp.status!==200) {
-            alert("Server error!");
+            //alert("Server error!");
+            loadBoard();
         }
     };
 }
@@ -159,6 +159,11 @@ function dropToImage(ev) {
 function drag(ev) {
     console.log("drag pawn: "+ev.target.id);
     ev.dataTransfer.setData("text", ev.target.id);
+
+    var selected = getSelectedPawn();
+    if(selected) {
+        pawnClick(selected);
+    }
 }
 
 function moveToCell(pawn, cellId) {
