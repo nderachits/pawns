@@ -105,7 +105,38 @@ public class GameTest {
 
     @Test(expected = MoveNotAllowedException.class)
     public void moveAtOpponentsTurnThrows() {
-        game.saveMove(0, 3, "user1");
+        game.saveMove(0, 3, "user2");
+    }
+
+    @Test(expected = MoveNotAllowedException.class)
+    public void straitMoveOnlyForPawn() {
+        game.saveMove(6, 4, "user1");
+    }
+
+    @Test(expected = MoveNotAllowedException.class)
+    public void oneCellMoveOnlyForPawn() {
+        game.saveMove(6, 0, "user1");
+    }
+
+    @Test(expected = MoveNotAllowedException.class)
+    public void forwardMoveOnlyForPawn() {
+        game.saveMove(6, 3, "user1");
+        game.saveMove(2, 5, "user2");
+        game.saveMove(3, 6, "user1");
+    }
+
+    @Test(expected = MoveNotAllowedException.class)
+    public void noAttackingOwnPawns() {
+        game.saveMove(6, 3, "user1");
+        game.saveMove(2, 5, "user2");
+        game.saveMove(7, 3, "user1");
+    }
+
+    @Test(expected = MoveNotAllowedException.class)
+    public void attackIsDiagonalMove() {
+        game.saveMove(6, 3, "user1");
+        game.saveMove(0, 3, "user2");
+
     }
 }
 

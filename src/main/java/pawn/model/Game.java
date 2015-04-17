@@ -65,7 +65,35 @@ public class Game {
         if(!isMyMoveNext(user1)) {
             throw new MoveNotAllowedException("It is opponents turn. You are "+user1+", but turn is "+(nextMoveWhite?"white":"black")+" player");
         }
+
+        validateMove(from, to);
         saveMove(from, to);
+    }
+
+    private void validateMove(int from, int to) {
+        int direction = cells[from] == Cell.black ? 1: -1;
+
+        if(line(to)-line(from) != 1*direction) {
+            throw new MoveNotAllowedException("Pawn moves one line forward");
+        }
+        if(cells[to] == Cell.empty) {
+            if(column(to) != column(from)) {
+                throw new MoveNotAllowedException("Pawn moves one cell forward when is not attacking");
+            }
+        } else if(cells[to] == cells[from]) {
+            throw new MoveNotAllowedException("Pawn can not attack own pawns");
+        } else if(Math.abs(column(to)-column(from)) != 1) {
+            throw new MoveNotAllowedException("Pawn can attack in diagonal move");
+        }
+
+    }
+
+    private int column(int to) {
+        return to % 3;
+    }
+
+    private int line(int to) {
+        return to / 3;
     }
 
     public String getWhitePlayer() {
