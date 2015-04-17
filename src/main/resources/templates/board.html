@@ -15,6 +15,7 @@
 </div>
 <div class="gamearea">
     <span th:text="'gameId: '+${gameId}"></span> |
+    <span th:inline="text">[[${game.whitePlayer}]] vs [[${game.blackPlayer}]]</span> |
     <span th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</span> |
     <a href="/" class="newgame">Home</a>
     <div th:if="${joinAvailable}">
