@@ -22,7 +22,6 @@ public class Game {
     private CompPlayer blackPlayerComp;
 
     private boolean nextMoveWhite;
-    private boolean startNeeded;
     private MoveListener moveListener;
 
     public Game(String gameId) {
@@ -31,7 +30,6 @@ public class Game {
                             Cell.empty,Cell.empty,Cell.empty,
                             Cell.white,Cell.white,Cell.white};
         nextMoveWhite = true;
-        startNeeded = false;
     }
 
     public int size() {
@@ -156,7 +154,6 @@ public class Game {
     public void setBlackPlayerComp(CompPlayer blackPlayerComp) {
         this.blackPlayerComp = blackPlayerComp;
         this.blackPlayer = COMPUTER_BLACK;
-        startNeeded = true;
     }
 
     public CompPlayer getBlackPlayerComp() {
@@ -166,7 +163,6 @@ public class Game {
     public void setWhitePlayerComp(CompPlayer whitePlayerComp) {
         this.whitePlayerComp = whitePlayerComp;
         this.whitePlayer = COMPUTER_WHITE;
-        startNeeded = true;
     }
 
     public CompPlayer getWhitePlayerComp() {
@@ -185,11 +181,6 @@ public class Game {
         } else {
             throw new MoveNotAllowedException("It is black's move and it is not computer");
         }
-        startNeeded = false;
-    }
-
-    public boolean isStartNeeded() {
-        return startNeeded;
     }
 
     public void setMoveListener(MoveListener moveListener) {

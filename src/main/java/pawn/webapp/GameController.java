@@ -108,7 +108,6 @@ public class GameController {
         model.addAttribute("pawnversion", version);
         model.addAttribute("game", game);
         model.addAttribute("joinAvailable", game.isJoinAvailableFor(WebSecurityConfig.getCurrentUser()));
-        model.addAttribute("startNeeded", game.isStartNeeded());
         return "board";
     }
 

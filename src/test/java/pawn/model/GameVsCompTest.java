@@ -39,18 +39,9 @@ public class GameVsCompTest {
         game.setWhitePlayerComp(new CompPlayer(game));
         assertNotNull(game.getWhitePlayerComp());
         game.moveByComputer();
-//        assertThat(cells, equalTo(game.cells()));
         assertThat(cells, not(equalTo(game.cells())));
     }
 
-    @Test
-    public void startNeededWhenVsComp() {
-        assertThat(game.isStartNeeded(), is(false));
-        game.setWhitePlayerComp(new CompPlayer(game));
-        assertThat(game.isStartNeeded(), is(true));
-        game.moveByComputer();
-        assertThat(game.isStartNeeded(), is(false));
-    }
 
     @Test
     public void gameSavesCompVsComp() {
