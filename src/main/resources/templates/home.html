@@ -8,8 +8,16 @@
 <div th:each="game : ${games}">
 <a th:href="@{'/game/'+${game}}" th:text="|game id: ${game}|">game1</a>
 </div>
-<form action="/new" method="post">
+<form th:action="@{/new}" method="post">
 <input type="submit" value="New game" />
+</form>
+<form th:action="@{/newvscomp}" method="post">
+    <input type="radio" name="color" value="white" checked="checked"/>white
+    <input type="radio" name="color" value="black"/>black
+<input type="submit" value="New vs Computer" />
+</form>
+<form th:action="@{/newcompvscomp}" method="post">
+<input type="submit" value="New Computer vs Computer" />
 </form>
 <p>
 <a th:unless="${#httpServletRequest.remoteUser}" th:href="@{/login}">Sign in</a>

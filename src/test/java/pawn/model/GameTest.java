@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import pawn.exceptions.MoveNotAllowedException;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 public class GameTest {
@@ -35,6 +36,22 @@ public class GameTest {
                 Cell.black, Cell.black, Cell.black,
                 Cell.white, Cell.empty, Cell.empty,
                 Cell.empty, Cell.white, Cell.white}, game.cells());
+    }
+
+    @Test
+    public void moveCallsListener() {
+        class MoveListenerStub implements MoveListener{
+            boolean boardUpdated=false;
+            public void boardUpdated(String gameId) {
+                boardUpdated = true;
+            }
+        }
+        MoveListenerStub moveListenerStub = new MoveListenerStub();
+
+        game.setMoveListener(moveListenerStub);
+        game.saveMove(6, 3, "user1");
+
+        assertThat(moveListenerStub.boardUpdated, is(true));
     }
 
     @Test

@@ -60,7 +60,10 @@ public class GameControllerWebAppTest {
     public void testGreeting() throws Exception {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Pawns home")));
+                .andExpect(content().string(containsString("Pawns home")))
+                .andExpect(xpath("//input[@type='submit'][@value='New game']").exists())
+                .andExpect(xpath("//input[@type='submit'][@value='New vs Computer']").exists())
+                .andExpect(xpath("//input[@type='submit'][@value='New Computer vs Computer']").exists());
     }
 
     @Test

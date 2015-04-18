@@ -44,8 +44,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception{
-        UserDetails user = new User("nike", "password", Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
+        UserDetails user = new User("z", "z", Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
+        UserDetails user2 = new User("a", "a", Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
         userDetailsManager().createUser(user);
+        userDetailsManager().createUser(user2);
         auth.userDetailsService(userDetailsManager());
     }
 

@@ -8,16 +8,22 @@ import pawn.exceptions.MoveNotAllowedException;
 public class Game {
 
     public static final int PAWNS_IN_LINE = 3;
+    public static final String COMPUTER_BLACK = "computerBlack";
+    public static final String COMPUTER_WHITE = "computerWhite";
 
     private Cell[] cells;
 
     private String gameId;
 
     private String whitePlayer;
+    private CompPlayer whitePlayerComp;
 
     private String blackPlayer;
+    private CompPlayer blackPlayerComp;
 
     private boolean nextMoveWhite;
+    private boolean startNeeded;
+    private MoveListener moveListener;
 
     public Game(String gameId) {
         this.gameId = gameId;
@@ -25,6 +31,7 @@ public class Game {
                             Cell.empty,Cell.empty,Cell.empty,
                             Cell.white,Cell.white,Cell.white};
         nextMoveWhite = true;
+        startNeeded = false;
     }
 
     public int size() {
@@ -66,34 +73,53 @@ public class Game {
             throw new MoveNotAllowedException("It is opponents turn. You are "+user1+", but turn is "+(nextMoveWhite?"white":"black")+" player");
         }
 
-        validateMove(from, to);
+        String result = validateMove(from, to);
+        if(result != null) {
+            throw new MoveNotAllowedException(result);
+        }
         saveMove(from, to);
+
+        afterMove();
     }
 
-    private void validateMove(int from, int to) {
+    private void afterMove() {
+        if(isComputerMovesNext()) {
+            moveByComputer();
+            if(moveListener!=null) {
+                moveListener.boardUpdated(gameId);
+            }
+        }
+    }
+
+    private boolean isComputerMovesNext() {
+        return (nextMoveWhite && whitePlayerComp!=null) || (!nextMoveWhite && blackPlayerComp!=null);
+    }
+
+    public String validateMove(int from, int to) {
         int direction = cells[from] == Cell.black ? 1: -1;
 
         if(line(to)-line(from) != 1*direction) {
-            throw new MoveNotAllowedException("Pawn moves one line forward");
+            return "Pawn moves one line forward";
         }
         if(cells[to] == Cell.empty) {
             if(column(to) != column(from)) {
-                throw new MoveNotAllowedException("Pawn moves one cell forward when is not attacking");
+                return "Pawn moves one cell forward when is not attacking";
             }
         } else if(cells[to] == cells[from]) {
-            throw new MoveNotAllowedException("Pawn can not attack own pawns");
+            return "Pawn can not attack own pawns";
         } else if(Math.abs(column(to)-column(from)) != 1) {
-            throw new MoveNotAllowedException("Pawn can attack in diagonal move");
+            return "Pawn can attack in diagonal move";
         }
 
+        return null;
     }
 
     private int column(int to) {
-        return to % 3;
+        return to % PAWNS_IN_LINE;
     }
 
     private int line(int to) {
-        return to / 3;
+        return to / PAWNS_IN_LINE;
     }
 
     public String getWhitePlayer() {
@@ -125,5 +151,52 @@ public class Game {
     public boolean isMyMoveNext(String user) {
         return (user.equals(whitePlayer) && nextMoveWhite) ||
                 (user.equals(blackPlayer) && !nextMoveWhite);
+    }
+
+    public void setBlackPlayerComp(CompPlayer blackPlayerComp) {
+        this.blackPlayerComp = blackPlayerComp;
+        this.blackPlayer = COMPUTER_BLACK;
+        startNeeded = true;
+    }
+
+    public CompPlayer getBlackPlayerComp() {
+        return blackPlayerComp;
+    }
+
+    public void setWhitePlayerComp(CompPlayer whitePlayerComp) {
+        this.whitePlayerComp = whitePlayerComp;
+        this.whitePlayer = COMPUTER_WHITE;
+        startNeeded = true;
+    }
+
+    public CompPlayer getWhitePlayerComp() {
+        return whitePlayerComp;
+    }
+
+    public void moveByComputer() {
+        if(nextMoveWhite) {
+            if(whitePlayerComp != null) {
+                whitePlayerComp.nextMove(nextMoveWhite);
+            } else {
+                throw new MoveNotAllowedException("It is white's move and it is not computer");
+            }
+        } else if (blackPlayer != null) {
+            blackPlayerComp.nextMove(nextMoveWhite);
+        } else {
+            throw new MoveNotAllowedException("It is black's move and it is not computer");
+        }
+        startNeeded = false;
+    }
+
+    public boolean isStartNeeded() {
+        return startNeeded;
+    }
+
+    public void setMoveListener(MoveListener moveListener) {
+        this.moveListener = moveListener;
+    }
+
+    public MoveListener getMoveListener() {
+        return moveListener;
     }
 }

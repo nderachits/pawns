@@ -15,6 +15,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import pawn.model.Game;
+import pawn.model.MoveListener;
 import pawn.model.dao.GameDao;
 import pawn.model.dto.GameDto;
 import pawn.model.dto.MoveDto;
@@ -32,7 +33,7 @@ import java.util.Map;
 
 @RestController
 @EnableWebSocket
-public class GameWebService extends TextWebSocketHandler implements WebSocketConfigurer {
+public class GameWebService extends TextWebSocketHandler implements WebSocketConfigurer, MoveListener {
 
     private Map<String, List<WebSocketSession>> sessionsMap = new HashMap<>();
 
@@ -99,7 +100,7 @@ public class GameWebService extends TextWebSocketHandler implements WebSocketCon
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         super.afterConnectionClosed(session, status);
-        System.out.println("session end: "+session.getId());
+        System.out.println("session end: " + session.getId());
         String gameId = extractGameId(session);
         removeSession(session, gameId);
     }
@@ -134,6 +135,15 @@ public class GameWebService extends TextWebSocketHandler implements WebSocketCon
         }
     }
 
+    @Override
+    public void boardUpdated(String gameId) {
+        try {
+            sendAll(gameId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public GameDao getGameDao() {
         return gameDao;
     }
@@ -141,4 +151,5 @@ public class GameWebService extends TextWebSocketHandler implements WebSocketCon
     public void setGameDao(GameDao gameDao) {
         this.gameDao = gameDao;
     }
+
 }
