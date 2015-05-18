@@ -26,6 +26,8 @@ public class GameTest {
                 Cell.black, Cell.black, Cell.black,
                 Cell.empty, Cell.empty, Cell.empty,
                 Cell.white, Cell.white, Cell.white}, game.cells());
+        assertFalse(game.isGameFinished());
+        assertTrue(game.isNextMoveWhite());
 
     }
 
@@ -36,6 +38,7 @@ public class GameTest {
                 Cell.black, Cell.black, Cell.black,
                 Cell.white, Cell.empty, Cell.empty,
                 Cell.empty, Cell.white, Cell.white}, game.cells());
+        assertFalse(game.isNextMoveWhite());
     }
 
     @Test
@@ -154,6 +157,14 @@ public class GameTest {
         game.saveMove(6, 3, "user1");
         game.saveMove(0, 3, "user2");
 
+    }
+
+    @Test
+    public void endOfgameIsIdentified() {
+        game.saveMove(6, 3, "user1");
+        game.saveMove(1, 4, "user2");
+        game.saveMove(8, 5, "user1");
+        assertTrue(game.isGameFinished());
     }
 }
 

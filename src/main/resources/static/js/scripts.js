@@ -34,7 +34,7 @@ function connectWebSocket() {
         var obj = JSON.parse(evt.data);
         console.log("cells from websocket: " + obj.cells);
         clearAllPawns();
-        placePawns(obj.cells);
+        placePawns(obj);
     };
 
     window.ws.onclose = function() {
@@ -66,14 +66,15 @@ function loadBoard() {
             if (xmlhttp.readyState==4 && xmlhttp.status==200) {
                 var obj = JSON.parse(xmlhttp.responseText);
                 console.log("cells from rest: " + obj.cells);
-                placePawns(obj.cells);
+                placePawns(obj);
             }
         };
     xmlhttp.open('GET', "/board/"+window.gameId, true);
     xmlhttp.send();
 }
 
-function placePawns(cells) {
+function placePawns(gameDto) {
+    var cells = gameDto.cells;
     var blackIds = ["pawn0", "pawn1", "pawn2"];
     var whiteIds = ["pawn3", "pawn4", "pawn5"];
     for(var i=0; i<9; i++) {
@@ -85,6 +86,9 @@ function placePawns(cells) {
             var pawnId = whiteIds.shift();
             placePawn(pawnId, cellId);
         }
+    }
+    if(gameDto.gameFinished) {
+        alert((gameDto.nextMoveWhite ? "Black": "White") + " won.");
     }
 }
 

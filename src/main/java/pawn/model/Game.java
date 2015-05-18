@@ -2,6 +2,9 @@ package pawn.model;
 
 import pawn.exceptions.MoveNotAllowedException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Mikalai_Dzerachyts on 2/18/2015.
  */
@@ -23,6 +26,7 @@ public class Game {
 
     private boolean nextMoveWhite;
     private MoveListener moveListener;
+    private boolean gameFinished;
 
     public Game(String gameId) {
         this.gameId = gameId;
@@ -30,6 +34,7 @@ public class Game {
                             Cell.empty,Cell.empty,Cell.empty,
                             Cell.white,Cell.white,Cell.white};
         nextMoveWhite = true;
+        gameFinished = false;
     }
 
     public int size() {
@@ -54,21 +59,21 @@ public class Game {
         nextMoveWhite = !nextMoveWhite;
     }
 
-    public void saveMove(int from, int to, String user1) {
+    public void saveMove(int from, int to, String user) {
         if(cells[from] == Cell.empty) {
             throw new IllegalStateException("Start cell of move is empty. from: "+from+", to: "+to);
         }
-        if(user1 == null || (!user1.equals(whitePlayer) && !user1.equals(blackPlayer))) {
-            throw new MoveNotAllowedException("User "+user1+" is not a player in game "+gameId);
+        if(user == null || (!user.equals(whitePlayer) && !user.equals(blackPlayer))) {
+            throw new MoveNotAllowedException("User "+user+" is not a player in game "+gameId);
         }
-        if(user1.equals(getWhitePlayer()) && cellAt(from) != Cell.white ) {
+        if(user.equals(getWhitePlayer()) && cellAt(from) != Cell.white ) {
             throw new MoveNotAllowedException("White player only allowed to move white pawns");
         }
-        if(user1.equals(getBlackPlayer()) && cellAt(from) != Cell.black ) {
+        if(user.equals(getBlackPlayer()) && cellAt(from) != Cell.black ) {
             throw new MoveNotAllowedException("Black player only allowed to move black pawns");
         }
-        if(!isMyMoveNext(user1)) {
-            throw new MoveNotAllowedException("It is opponents turn. You are "+user1+", but turn is "+(nextMoveWhite?"white":"black")+" player");
+        if(!isMyMoveNext(user)) {
+            throw new MoveNotAllowedException("It is opponents turn. You are "+user+", but turn is "+(nextMoveWhite?"white":"black")+" player");
         }
 
         String result = validateMove(from, to);
@@ -81,7 +86,10 @@ public class Game {
     }
 
     private void afterMove() {
-        if(isComputerMovesNext()) {
+
+        if(getMoveOptionsFor(nextMoveWhite).size() == 0) {
+            gameFinished = true;
+        } else if(isComputerMovesNext()) {
             moveByComputer();
             if(moveListener!=null) {
                 moveListener.boardUpdated(gameId);
@@ -96,7 +104,7 @@ public class Game {
     public String validateMove(int from, int to) {
         int direction = cells[from] == Cell.black ? 1: -1;
 
-        if(line(to)-line(from) != 1*direction) {
+        if(line(to)-line(from) != direction) {
             return "Pawn moves one line forward";
         }
         if(cells[to] == Cell.empty) {
@@ -183,11 +191,35 @@ public class Game {
         }
     }
 
+    public List<Move> getMoveOptionsFor(boolean moveAsWhite) {
+        Cell myPawn = moveAsWhite ? Cell.white : Cell.black;
+        Cell[] cells = this.cells();
+        List<Move> moveOptions = new ArrayList<>();
+        for(int i=0; i<cells.length; i++ ) {
+            if(cells[i].equals(myPawn)) {
+                for(int j=0; j<cells.length; j++) {
+                    if(this.validateMove(i, j) == null) {
+                        moveOptions.add(new Move(i, j));
+                    }
+                }
+            }
+        }
+        return moveOptions;
+    }
+
     public void setMoveListener(MoveListener moveListener) {
         this.moveListener = moveListener;
     }
 
     public MoveListener getMoveListener() {
         return moveListener;
+    }
+
+    public boolean isGameFinished() {
+        return gameFinished;
+    }
+
+    public boolean isNextMoveWhite() {
+        return nextMoveWhite;
     }
 }

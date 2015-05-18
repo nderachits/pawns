@@ -4,9 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import pawn.exceptions.MoveNotAllowedException;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 /**
@@ -38,6 +36,7 @@ public class GameVsCompTest {
         Cell[] cells = game.cells();
         game.setWhitePlayerComp(new CompPlayer(game));
         assertNotNull(game.getWhitePlayerComp());
+        assertTrue(game.getMoveOptionsFor(true).size() > 0);
         game.moveByComputer();
         assertThat(cells, not(equalTo(game.cells())));
     }
