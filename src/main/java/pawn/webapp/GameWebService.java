@@ -1,10 +1,17 @@
 package pawn.webapp;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -14,17 +21,13 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import pawn.model.Game;
 import pawn.model.MoveListener;
 import pawn.model.dao.GameDao;
 import pawn.model.dto.GameDto;
 import pawn.model.dto.MoveDto;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * User: nike
@@ -137,11 +140,12 @@ public class GameWebService extends TextWebSocketHandler implements WebSocketCon
 
     @Override
     public void boardUpdated(String gameId) {
-        try {
-            sendAll(gameId);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+// comented as redundant
+//        try {
+//            sendAll(gameId);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     public GameDao getGameDao() {
