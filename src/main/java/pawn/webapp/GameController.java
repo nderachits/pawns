@@ -1,5 +1,6 @@
 package pawn.webapp;
 
+import javax.validation.Valid;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,6 @@ import pawn.model.CompPlayer;
 import pawn.model.Game;
 import pawn.model.dao.GameDao;
 import pawn.webapp.forms.GameVsCompForm;
-
-import javax.validation.Valid;
 
 /**
  * User: nike
@@ -50,6 +49,7 @@ public class GameController {
     public String newGame() {
         String gameId = gameDao.newGameId();
         Game game = gameDao.loadGameById(gameId);
+        game.setMoveListener(gameWebService);
         game.setWhitePlayer(WebSecurityConfig.getCurrentUser());
         log.info("new game id: " + gameId);
         return "redirect:/game/"+gameId;
@@ -59,19 +59,34 @@ public class GameController {
     public String newVsComp(@Valid GameVsCompForm gameVsComp) {
         String gameId = gameDao.newGameId();
         Game game = gameDao.loadGameById(gameId);
+        game.setMoveListener(gameWebService);
         if(gameVsComp.getColor().equalsIgnoreCase("white")) {
             game.setWhitePlayer(WebSecurityConfig.getCurrentUser());
             game.setBlackPlayerComp(new CompPlayer(game));
         } else if(gameVsComp.getColor().equalsIgnoreCase("black")) {
             game.setBlackPlayer(WebSecurityConfig.getCurrentUser());
             game.setWhitePlayerComp(new CompPlayer(game));
-            game.moveByComputer();
+            startComp(game);
         } else {
             throw new IllegalStateException("Color is not set for playing with Computer");
         }
-        game.setMoveListener(gameWebService);
+
         log.info("new game id vs Comp: " + gameId);
         return "redirect:/game/"+gameId;
+    }
+
+    private void startComp(final Game game) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                game.moveByComputer();
+            }
+        }).start();
     }
 
 
@@ -87,9 +102,10 @@ public class GameController {
     public String newCompVsComp() {
         String gameId = gameDao.newGameId();
         Game game = gameDao.loadGameById(gameId);
-        game.setWhitePlayerComp(new CompPlayer(game));
-        game.setBlackPlayerComp(new CompPlayer(game));
-        game.moveByComputer();
+        game.setMoveListener(gameWebService);
+        game.setWhitePlayerComp(new CompPlayer(game, 500));
+        game.setBlackPlayerComp(new CompPlayer(game, 500));
+        startComp(game);
         log.info("new game id: " + gameId);
         return "redirect:/game/"+gameId;
     }

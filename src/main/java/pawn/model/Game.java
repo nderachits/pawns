@@ -1,9 +1,8 @@
 package pawn.model;
 
-import pawn.exceptions.MoveNotAllowedException;
-
 import java.util.ArrayList;
 import java.util.List;
+import pawn.exceptions.MoveNotAllowedException;
 
 /**
  * Created by Mikalai_Dzerachyts on 2/18/2015.
@@ -86,14 +85,14 @@ public class Game {
     }
 
     private void afterMove() {
-
         if(getMoveOptionsFor(nextMoveWhite).size() == 0) {
             gameFinished = true;
-        } else if(isComputerMovesNext()) {
+        }
+        if(moveListener!=null) {
+            moveListener.boardUpdated(gameId);
+        }
+        if(!gameFinished && isComputerMovesNext()) {
             moveByComputer();
-            if(moveListener!=null) {
-                moveListener.boardUpdated(gameId);
-            }
         }
     }
 

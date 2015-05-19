@@ -55,7 +55,6 @@ public class GameWebService extends TextWebSocketHandler implements WebSocketCon
         String user = WebSecurityConfig.getCurrentUser();
         game.saveMove(param.getFrom(), param.getTo(), user);
         System.out.println("Game: "+gameId+", move from "+param.getFrom()+" to "+param.getTo());
-        sendAll(gameId);
     }
 
     //not used
@@ -140,12 +139,11 @@ public class GameWebService extends TextWebSocketHandler implements WebSocketCon
 
     @Override
     public void boardUpdated(String gameId) {
-// comented as redundant
-//        try {
-//            sendAll(gameId);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+            sendAll(gameId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public GameDao getGameDao() {
