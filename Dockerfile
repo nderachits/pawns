@@ -1,6 +1,5 @@
 FROM java:7
 
-RUN add-apt-repository ppa:cwchien/gradle
 RUN apt-get update
 RUN apt-get install -y gradle
 
