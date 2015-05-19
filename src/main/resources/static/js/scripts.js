@@ -88,7 +88,10 @@ function placePawns(gameDto) {
         }
     }
     if(gameDto.gameFinished) {
-        alert((gameDto.nextMoveWhite ? "Black": "White") + " won.");
+        setTimeout(function() {
+            alert((gameDto.nextMoveWhite ? "Black": "White") + " won.");
+        }, 250);
+
     }
 }
 

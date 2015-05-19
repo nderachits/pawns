@@ -17,6 +17,7 @@ apply plugin: 'spring-boot'
 
 
 jar {
+    destinationDir = file('jar')
     baseName = 'pawn-boot'
     version = '0.1.0'
 }
