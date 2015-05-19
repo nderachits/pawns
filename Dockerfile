@@ -1,8 +1,7 @@
 FROM java:7
 
-RUN apt-get update
-RUN wget https://services.gradle.org/distributions/gradle-1.8-all.zip
-RUN unzip -o gradle-1.8-all.zip -d /opt/
+RUN wget https://services.gradle.org/distributions/gradle-1.8-bin.zip
+RUN unzip -o gradle-1.8-bin.zip -d /opt/
 ENV PATH /opt/gradle-1.8/bin:$PATH
 
 COPY . /code
