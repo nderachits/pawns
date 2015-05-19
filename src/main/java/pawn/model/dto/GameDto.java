@@ -7,14 +7,14 @@ import pawn.model.Game;
  * User: nike
  * Date: 2/19/15
  */
-public class GameDto2 {
+public class GameDto {
 
     private final Cell[] cells;
     private final String gameId;
     private final boolean gameFinished;
     private final boolean nextMoveWhite;
 
-    public GameDto2(Game game) {
+    public GameDto(Game game) {
         this.gameId = game.getGameId();
         this.cells = game.cells();
         nextMoveWhite = game.isNextMoveWhite();

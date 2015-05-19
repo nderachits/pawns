@@ -26,7 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import pawn.model.Game;
 import pawn.model.MoveListener;
 import pawn.model.dao.GameDao;
-import pawn.model.dto.GameDto2;
+import pawn.model.dto.GameDto;
 import pawn.model.dto.MoveDto;
 
 /**
@@ -44,9 +44,9 @@ public class GameWebService extends TextWebSocketHandler implements WebSocketCon
     private GameDao gameDao;
 
     @RequestMapping("/board/{gameId}")
-    public GameDto2 boardById(@PathVariable String gameId) {
+    public GameDto boardById(@PathVariable String gameId) {
         Game game = getGameDao().loadGameById(gameId);
-        return new GameDto2(game);
+        return new GameDto(game);
     }
 
     @RequestMapping(value = "/move/{gameId}", method = RequestMethod.POST)
@@ -60,10 +60,10 @@ public class GameWebService extends TextWebSocketHandler implements WebSocketCon
 
     //not used
     @RequestMapping(value = "/newgameid", method = RequestMethod.POST)
-    public GameDto2 newGameId() throws JsonProcessingException {
+    public GameDto newGameId() throws JsonProcessingException {
         String gameId = getGameDao().newGameId();
         Game game = getGameDao().loadGameById(gameId);
-        GameDto2 gameDto = new GameDto2(game);
+        GameDto gameDto = new GameDto(game);
         return gameDto;
     }
 
@@ -127,7 +127,7 @@ public class GameWebService extends TextWebSocketHandler implements WebSocketCon
         }
         ObjectMapper mapper = new ObjectMapper();
         Game game = getGameDao().loadGameById(gameId);
-        String text = mapper.writeValueAsString(new GameDto2(game));
+        String text = mapper.writeValueAsString(new GameDto(game));
         System.out.println("text to send: " + text);
         for (WebSocketSession session : sessionsList) {
             try {
