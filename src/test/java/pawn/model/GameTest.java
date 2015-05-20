@@ -52,7 +52,7 @@ public class GameTest {
         MoveListenerStub moveListenerStub = new MoveListenerStub();
 
         game.setMoveListener(moveListenerStub);
-        game.setBlackPlayerComp(new CompPlayer(game));
+        game.setBlackPlayerComp(new RandomCompPlayer(game));
         game.saveMove(6, 3, "user1");
         assertThat(moveListenerStub.boardUpdated, is(true));
     }

@@ -20,21 +20,21 @@ public class GameVsCompTest {
 
     @Test
     public void gameVsComputerAsBlackPlayer() {
-        CompPlayer comp = new CompPlayer(game);
+        RandomCompPlayer comp = new RandomCompPlayer(game);
         game.setBlackPlayerComp(comp);
         assertNotNull(game.getBlackPlayerComp());
     }
 
     @Test(expected = MoveNotAllowedException.class)
     public void throwsWhenTurnIsNotWhiteComp() {
-        game.setBlackPlayerComp(new CompPlayer(game));
+        game.setBlackPlayerComp(new RandomCompPlayer(game));
         game.moveByComputer();
     }
 
     @Test
     public void gameVsComputerAsWhitePlayer() {
         Cell[] cells = game.cells();
-        game.setWhitePlayerComp(new CompPlayer(game));
+        game.setWhitePlayerComp(new RandomCompPlayer(game));
         assertNotNull(game.getWhitePlayerComp());
         assertTrue(game.getMoveOptionsFor(true).size() > 0);
         game.moveByComputer();
@@ -44,8 +44,8 @@ public class GameVsCompTest {
 
     @Test
     public void gameSavesCompVsComp() {
-        game.setWhitePlayerComp(new CompPlayer(game));
-        game.setBlackPlayerComp(new CompPlayer(game));
+        game.setWhitePlayerComp(new RandomCompPlayer(game));
+        game.setBlackPlayerComp(new RandomCompPlayer(game));
         assertNotNull(game.getWhitePlayerComp());
         assertNotNull(game.getBlackPlayerComp());
     }

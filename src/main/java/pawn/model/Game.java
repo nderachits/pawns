@@ -101,6 +101,10 @@ public class Game {
     }
 
     public String validateMove(int from, int to) {
+        return validateMove(cells, from, to);
+    }
+
+    public static String validateMove(Cell[] cells, int from, int to) {
         int direction = cells[from] == Cell.black ? 1: -1;
 
         if(line(to)-line(from) != direction) {
@@ -119,11 +123,11 @@ public class Game {
         return null;
     }
 
-    private int column(int to) {
+    private static int column(int to) {
         return to % PAWNS_IN_LINE;
     }
 
-    private int line(int to) {
+    private static int line(int to) {
         return to / PAWNS_IN_LINE;
     }
 
@@ -191,13 +195,16 @@ public class Game {
     }
 
     public List<Move> getMoveOptionsFor(boolean moveAsWhite) {
+        return getMoveOptionsFor(cells, moveAsWhite);
+    }
+
+    public static List<Move> getMoveOptionsFor(Cell[] cells, boolean moveAsWhite) {
         Cell myPawn = moveAsWhite ? Cell.white : Cell.black;
-        Cell[] cells = this.cells();
         List<Move> moveOptions = new ArrayList<>();
         for(int i=0; i<cells.length; i++ ) {
             if(cells[i].equals(myPawn)) {
                 for(int j=0; j<cells.length; j++) {
-                    if(this.validateMove(i, j) == null) {
+                    if(validateMove(cells, i, j) == null) {
                         moveOptions.add(new Move(i, j));
                     }
                 }

@@ -11,7 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import pawn.model.CompPlayer;
+import pawn.model.RandomCompPlayer;
 import pawn.model.Game;
 import pawn.model.dao.GameDao;
 import pawn.webapp.forms.GameVsCompForm;
@@ -62,10 +62,10 @@ public class GameController {
         game.setMoveListener(gameWebService);
         if(gameVsComp.getColor().equalsIgnoreCase("white")) {
             game.setWhitePlayer(WebSecurityConfig.getCurrentUser());
-            game.setBlackPlayerComp(new CompPlayer(game));
+            game.setBlackPlayerComp(new RandomCompPlayer(game));
         } else if(gameVsComp.getColor().equalsIgnoreCase("black")) {
             game.setBlackPlayer(WebSecurityConfig.getCurrentUser());
-            game.setWhitePlayerComp(new CompPlayer(game));
+            game.setWhitePlayerComp(new RandomCompPlayer(game));
             startComp(game);
         } else {
             throw new IllegalStateException("Color is not set for playing with Computer");
@@ -103,8 +103,8 @@ public class GameController {
         String gameId = gameDao.newGameId();
         Game game = gameDao.loadGameById(gameId);
         game.setMoveListener(gameWebService);
-        game.setWhitePlayerComp(new CompPlayer(game, 500));
-        game.setBlackPlayerComp(new CompPlayer(game, 500));
+        game.setWhitePlayerComp(new RandomCompPlayer(game, 500));
+        game.setBlackPlayerComp(new RandomCompPlayer(game, 500));
         startComp(game);
         log.info("new game id: " + gameId);
         return "redirect:/game/"+gameId;
