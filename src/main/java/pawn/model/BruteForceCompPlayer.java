@@ -9,13 +9,20 @@ import java.util.List;
 public class BruteForceCompPlayer implements CompPlayer {
 
     private Game game;
+    private int pauseMs;
 
     public BruteForceCompPlayer(Game game) {
         this.game = game;
     }
 
+    public BruteForceCompPlayer(Game game, int pauseMs) {
+        this.game = game;
+        this.pauseMs = pauseMs;
+    }
+
     @Override
     public void nextMove(boolean playerColor) {
+        pause();
         Cell[] cells = game.cells();
 
         Move move = bestNextMoveRec(cells, playerColor, playerColor, null);
@@ -33,11 +40,7 @@ public class BruteForceCompPlayer implements CompPlayer {
         List<Move> moveOptions = Game.getMoveOptionsFor(cells, nextMoveColor);
         if(moveOptions.size() == 0) {
             if(origMove != null) {
-                if (playerColor != nextMoveColor) {
-                    origMove.wonNumber++;
-                } else {
-                    origMove.lostNumber++;
-                }
+                origMove.won = playerColor != nextMoveColor;
             }
         } else {
             for (Move move : moveOptions) {
@@ -52,29 +55,35 @@ public class BruteForceCompPlayer implements CompPlayer {
             if(playerColor == nextMoveColor) {
                 Move bestMove = null;
                 for (Move move : moveOptions) {
-                    if (bestMove == null || move.wonNumber > 0) {
+                    if (bestMove == null || move.won) { //todo: choose randomly if no win move
                         bestMove = move;
                     }
                 }
                 if(origMove != null) {
-                    origMove.wonNumber += bestMove.wonNumber > 0 ? 1 : 0;
+                    origMove.won = bestMove.won;
                 } else {
                     return bestMove;
                 }
             } else {
-                boolean anyWon = false;
+                boolean won = true;
                 for (Move move : moveOptions) {
-                    if(move.lostNumber == 0) {
-                        anyWon = true;
-                    }
+                    won &= move.won;
                 }
                 if(origMove != null) {
-                    origMove.lostNumber += anyWon ? 1 : 0;
+                    origMove.won = won;
                 }
-
             }
-
         }
         return null;
+    }
+
+    private void pause() {
+        if(pauseMs > 0) {
+            try {
+                Thread.sleep(pauseMs);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

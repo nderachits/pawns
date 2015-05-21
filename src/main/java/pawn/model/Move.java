@@ -7,8 +7,7 @@ package pawn.model;
 final public class Move {
     public final int from;
     public final int to;
-    public int lostNumber;
-    public int wonNumber;
+    public boolean won;
 
     public Move(int from, int to) {
         this.from = from;
@@ -20,8 +19,7 @@ final public class Move {
         return "Move{" +
                 "from=" + from +
                 ", to=" + to +
-                ", lostNumber=" + lostNumber +
-                ", wonNumber=" + wonNumber +
+                ", won=" + won +
                 '}';
     }
 }

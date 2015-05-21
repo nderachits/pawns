@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import pawn.model.BruteForceCompPlayer;
 import pawn.model.RandomCompPlayer;
 import pawn.model.Game;
 import pawn.model.dao.GameDao;
@@ -62,10 +63,10 @@ public class GameController {
         game.setMoveListener(gameWebService);
         if(gameVsComp.getColor().equalsIgnoreCase("white")) {
             game.setWhitePlayer(WebSecurityConfig.getCurrentUser());
-            game.setBlackPlayerComp(new RandomCompPlayer(game));
+            game.setBlackPlayerComp(new BruteForceCompPlayer(game));
         } else if(gameVsComp.getColor().equalsIgnoreCase("black")) {
             game.setBlackPlayer(WebSecurityConfig.getCurrentUser());
-            game.setWhitePlayerComp(new RandomCompPlayer(game));
+            game.setWhitePlayerComp(new BruteForceCompPlayer(game));
             startComp(game);
         } else {
             throw new IllegalStateException("Color is not set for playing with Computer");
@@ -80,7 +81,7 @@ public class GameController {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -103,8 +104,8 @@ public class GameController {
         String gameId = gameDao.newGameId();
         Game game = gameDao.loadGameById(gameId);
         game.setMoveListener(gameWebService);
-        game.setWhitePlayerComp(new RandomCompPlayer(game, 500));
-        game.setBlackPlayerComp(new RandomCompPlayer(game, 500));
+        game.setWhitePlayerComp(new BruteForceCompPlayer(game, 1000));
+        game.setBlackPlayerComp(new BruteForceCompPlayer(game, 1000));
         startComp(game);
         log.info("new game id: " + gameId);
         return "redirect:/game/"+gameId;
