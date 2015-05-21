@@ -1,6 +1,8 @@
 package pawn.model;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * User: nike
@@ -53,12 +55,17 @@ public class BruteForceCompPlayer implements CompPlayer {
             }
 
             if(playerColor == nextMoveColor) {
-                Move bestMove = null;
+                List<Move> winMoves = new ArrayList<>();
+                List<Move> lostMoves = new ArrayList<>();
                 for (Move move : moveOptions) {
-                    if (bestMove == null || move.won) { //todo: choose randomly if no win move
-                        bestMove = move;
+                    if (move.won) {
+                        winMoves.add(move);
+                    } else {
+                        lostMoves.add(move);
                     }
                 }
+                List<Move> bestMoves = winMoves.size() > 0 ? winMoves : lostMoves;
+                Move bestMove = bestMoves.get(new Random().nextInt(bestMoves.size()));
                 if(origMove != null) {
                     origMove.won = bestMove.won;
                 } else {
